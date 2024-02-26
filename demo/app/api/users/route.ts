@@ -4,14 +4,14 @@ import { NextResponse, NextRequest } from 'next/server'
 
 //get all users
 export async function GET() {
-	// await connectDB()
+	await connectDB()
 	const users = await User.find()
 	return NextResponse.json({ results: users.length, users })
 }
 
 //create a new user
 export async function POST(request: NextRequest) {
-	// await connectDB()
+	await connectDB()
 
 	const {
 		firstName,

@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Chip from '@mui/material/Chip'
+import { useEffect } from 'react'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -42,10 +43,19 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 	}
 }
 
-export default function MultipleSelectChip() {
+export default function MultipleSelectChip({
+	dvalue,
+}: {
+	dvalue?: undefined | [string]
+}) {
 	const theme = useTheme()
 	const [personName, setPersonName] = React.useState<string[]>([])
-
+	useEffect(() => {
+		// Update the state when dvalue changes
+		if (dvalue) {
+			setPersonName(dvalue)
+		}
+	}, [])
 	const handleChange = (event: SelectChangeEvent<typeof personName>) => {
 		const {
 			target: { value },
@@ -55,7 +65,7 @@ export default function MultipleSelectChip() {
 
 	return (
 		<div>
-			<FormControl sx={{ m: 1, width: 300 }}>
+			<FormControl sx={{ width: '100%' }}>
 				<InputLabel id='demo-multiple-chip-label'>Hobbies</InputLabel>
 				<Select
 					labelId='demo-multiple-chip-label'
