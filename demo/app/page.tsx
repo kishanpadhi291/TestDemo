@@ -1,24 +1,15 @@
-// import Form from '@/components/Form'
+import FormModel from '@/components/FormModel'
 import Table from '@/components/Table'
-import { Box, Button } from '@mui/material'
-import Link from 'next/link'
+import connectDB from '@/utils/connectDB'
+
+// connectDB()
 
 const page = () => {
 	return (
 		<>
-			<Box textAlign='center' mt={2}>
-				<Button
-					component={Link}
-					href='/Form'
-					variant='contained'
-					color='primary'
-				>
-					Add data
-				</Button>
-			</Box>
+			<FormModel />
 			<Table />
 		</>
 	)
 }
-
 export default page

@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
 	Table,
 	TableBody,
@@ -9,32 +9,60 @@ import {
 	TableRow,
 	Paper,
 	TextField,
-	makeStyles,
 	TablePagination,
+	Tooltip,
+	IconButton,
 } from '@mui/material'
-
-interface food {
-	name: string
-	calories: number
-	fat: number
-	carbs: number
-	protein: number
-}
-
-const originalRows: food[] = [
-	{ name: 'Pizza', calories: 200, fat: 6.0, carbs: 24, protein: 4.0 },
-	{ name: 'Hot Dog', calories: 300, fat: 6.0, carbs: 24, protein: 4.0 },
-	{ name: 'Burger', calories: 400, fat: 6.0, carbs: 24, protein: 4.0 },
-	{ name: 'Hamburger', calories: 500, fat: 6.0, carbs: 24, protein: 4.0 },
-	{ name: 'Fries', calories: 600, fat: 6.0, carbs: 24, protein: 4.0 },
-	{ name: 'Ice Cream', calories: 700, fat: 6.0, carbs: 24, protein: 4.0 },
-]
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { useRouter } from 'next/navigation'
+import FormModel from './FormModel'
+import { Students, dataAdded, getStudents } from '@/lib/FormSlice'
+import { useSelector } from 'react-redux'
+import { StoreState } from '@/lib/store/store'
+import { useAppDispatch } from '@/lib/hooks/hooks'
+import axios from 'axios'
 
 export default function BasicTable() {
-	const [rows, setRows] = useState<food[]>(originalRows)
+	const router = useRouter()
+	const dispatch = useAppDispatch()
+	const studentsdata = useSelector((state: StoreState) => state.form.students)
+	const added = useSelector((state: StoreState) => state.form.added)
+	const [rows, setRows] = useState<Students[]>(studentsdata)
 	const [searched, setSearched] = useState<string>('')
 	const [page, setPage] = React.useState(0)
-	const [rowsPerPage, setRowsPerPage] = React.useState(10)
+	const [rowsPerPage, setRowsPerPage] = React.useState(5)
+	const [editData, setEditData] = useState<string | null>(null)
+
+	useEffect(() => {
+		!studentsdata.length && dispatch(getStudents())
+		console.log('table useef', studentsdata)
+		setRows(studentsdata)
+	}, [studentsdata])
+	useEffect(() => {
+		dispatch(getStudents())
+		setRows(studentsdata)
+	}, [added])
+
+	const handleEditClick = (data: string) => {
+		console.log('Edit clicked with data:', data)
+		setEditData(data!)
+	}
+
+	const handleDeleteClick = async (data: string) => {
+		console.log('Delete clicked with data:', data)
+		const res = await axios.delete(`http://localhost:3000/api/users/${data}`)
+		if (res.status === 200) {
+			alert('Student deleted successfully')
+			dispatch(dataAdded())
+		}
+	}
+
+	const handleRowClick = (data: string) => {
+		console.log('Row clicked with data:', data)
+		router.push(`/${data}`)
+	}
+
 	const handleChangePage = useCallback((event: unknown, newPage: number) => {
 		setPage(newPage)
 	}, [])
@@ -47,20 +75,28 @@ export default function BasicTable() {
 		[]
 	)
 
-	const requestSearch = useCallback((searchedVal: string) => {
-		setSearched(searchedVal)
-		const filteredRows = originalRows.filter((row) => {
-			return row.name.toLowerCase().includes(searchedVal.toLowerCase())
-		})
-		setRows(filteredRows)
-	}, [])
+	const requestSearch = useCallback(
+		(searchedVal: string) => {
+			setSearched(searchedVal)
+			const filteredRows = studentsdata.filter((row) => {
+				const lowerSearchedVal = searchedVal.toLowerCase()
+				return row.firstName.toLowerCase().includes(lowerSearchedVal)
+			})
+			setRows(filteredRows)
+		},
+		[studentsdata]
+	)
 
 	const getRowsForCurrentPage = useMemo(() => {
 		const startIndex = page * rowsPerPage
 		const endIndex = startIndex + rowsPerPage
 		return rows.slice(startIndex, endIndex)
 	}, [page, rows, rowsPerPage])
-
+	useEffect(() => {
+		if (searched === '') {
+			setRows(studentsdata)
+		}
+	}, [searched, studentsdata])
 	return (
 		<>
 			<Paper style={{ margin: '1%' }}>
@@ -75,33 +111,52 @@ export default function BasicTable() {
 					<Table aria-label='simple table'>
 						<TableHead>
 							<TableRow>
-								<TableCell style={{ fontWeight: 'bold' }}>
-									Food (100g serving)
+								<TableCell style={{ fontWeight: 'bold' }}>Firstname</TableCell>
+								<TableCell align='right' style={{ fontWeight: 'bold' }}>
+									Email
 								</TableCell>
 								<TableCell align='right' style={{ fontWeight: 'bold' }}>
-									Calories
+									Gender
 								</TableCell>
 								<TableCell align='right' style={{ fontWeight: 'bold' }}>
-									Fat&nbsp;(g)
-								</TableCell>
-								<TableCell align='right' style={{ fontWeight: 'bold' }}>
-									Carbs&nbsp;(g)
-								</TableCell>
-								<TableCell align='right' style={{ fontWeight: 'bold' }}>
-									Protein&nbsp;(g)
+									Actions
 								</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{getRowsForCurrentPage.map((row) => (
-								<TableRow key={row.name}>
+								<TableRow
+									key={row._id}
+									onClick={() => handleRowClick(row._id)}
+									style={{ cursor: 'pointer' }}
+								>
 									<TableCell component='th' scope='row'>
-										{row.name}
+										{row.firstName}
 									</TableCell>
-									<TableCell align='right'>{row.calories}</TableCell>
-									<TableCell align='right'>{row.fat}</TableCell>
-									<TableCell align='right'>{row.carbs}</TableCell>
-									<TableCell align='right'>{row.protein}</TableCell>
+									<TableCell align='right'>{row.email}</TableCell>
+									<TableCell align='right'>{row.gender}</TableCell>
+									<TableCell align='right'>
+										<Tooltip title='Edit'>
+											<IconButton
+												onClick={(e) => {
+													e.stopPropagation()
+													handleEditClick(row._id)
+												}}
+											>
+												<EditIcon />
+											</IconButton>
+										</Tooltip>
+										<Tooltip title='Delete'>
+											<IconButton
+												onClick={(e) => {
+													e.stopPropagation()
+													handleDeleteClick(row._id)
+												}}
+											>
+												<DeleteIcon />
+											</IconButton>
+										</Tooltip>
+									</TableCell>
 								</TableRow>
 							))}
 						</TableBody>
@@ -117,6 +172,7 @@ export default function BasicTable() {
 					onRowsPerPageChange={handleChangeRowsPerPage}
 				/>
 			</Paper>
+			{editData && <FormModel id={editData} onClose={setEditData} />}
 		</>
 	)
 }
