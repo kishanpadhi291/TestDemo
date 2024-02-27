@@ -29,22 +29,22 @@ import axios from 'axios'
 export default function StudentTable() {
 	const router = useRouter()
 	const dispatch = useAppDispatch()
-	const studentsdata = useSelector((state: StoreState) => state.form.students)
+	const studentsData = useSelector((state: StoreState) => state.form.students)
 	const added = useSelector((state: StoreState) => state.form.added)
-	const [rows, setRows] = useState<Students[]>(studentsdata)
+	const [rows, setRows] = useState<Students[]>(studentsData)
 	const [searched, setSearched] = useState<string>('')
 	const [page, setPage] = React.useState(0)
 	const [rowsPerPage, setRowsPerPage] = React.useState(5)
 	const [editData, setEditData] = useState<string | null>(null)
 
 	useEffect(() => {
-		!studentsdata.length && dispatch(getStudents())
-		console.log('table useef', studentsdata)
-		setRows(studentsdata)
-	}, [studentsdata])
+		!studentsData.length && dispatch(getStudents())
+		console.log('table useef', studentsData)
+		setRows(studentsData)
+	}, [studentsData])
 	useEffect(() => {
 		dispatch(getStudents())
-		setRows(studentsdata)
+		setRows(studentsData)
 	}, [added])
 
 	const handleEditClick = (data: string) => {
@@ -81,13 +81,13 @@ export default function StudentTable() {
 	const requestSearch = useCallback(
 		(searchedVal: string) => {
 			setSearched(searchedVal)
-			const filteredRows = studentsdata.filter((row) => {
+			const filteredRows = studentsData.filter((row) => {
 				const lowerSearchedVal = searchedVal.toLowerCase()
 				return row.firstName.toLowerCase().includes(lowerSearchedVal)
 			})
 			setRows(filteredRows)
 		},
-		[studentsdata]
+		[studentsData]
 	)
 
 	const getRowsForCurrentPage = useMemo(() => {
@@ -97,9 +97,9 @@ export default function StudentTable() {
 	}, [page, rows, rowsPerPage])
 	useEffect(() => {
 		if (searched === '') {
-			setRows(studentsdata)
+			setRows(studentsData)
 		}
-	}, [searched, studentsdata])
+	}, [searched, studentsData])
 	return (
 		<>
 			<Container fixed maxWidth="lg">
@@ -110,23 +110,23 @@ export default function StudentTable() {
 						placeholder='Search...'
 						value={searched}
 						onChange={(e) => requestSearch(e.target.value)}
-						style={{ margin: '24px 0' }}
+						sx={{ margin: '24px 0' }}
 					/>
 					<FormModel />
 				</Box>
-				<Paper style={{ margin: '0 auto' }}>
+				<Paper sx={{ margin: '0 auto' }}>
 					<TableContainer>
 						<Table aria-label='simple table'>
-							<TableHead style={{ backgroundColor: '#a08eb9' }}			>
+							<TableHead sx={{ backgroundColor: '#a08eb9' }}			>
 								<TableRow>
-									<TableCell style={{ fontWeight: 'bold' }}>Firstname</TableCell>
-									<TableCell align='right' style={{ fontWeight: 'bold' }}>
+									<TableCell sx={{ fontWeight: 'bold' }}>Firstname</TableCell>
+									<TableCell align='right' sx={{ fontWeight: 'bold' }}>
 										Email
 									</TableCell>
-									<TableCell align='right' style={{ fontWeight: 'bold' }}>
+									<TableCell align='right' sx={{ fontWeight: 'bold' }}>
 										Gender
 									</TableCell>
-									<TableCell align='right' style={{ fontWeight: 'bold' }}>
+									<TableCell align='right' sx={{ fontWeight: 'bold' }}>
 										Actions
 									</TableCell>
 								</TableRow>
@@ -136,8 +136,8 @@ export default function StudentTable() {
 									<TableRow
 										key={row._id}
 										onClick={() => handleRowClick(row._id)}
-										style={{ cursor: 'pointer' }}
-										className={index % 2 === 0 ? 'table-row-even' : 'table-row-odd'} // Apply the styles here
+										sx={{ cursor: 'pointer' }}
+										className={index % 2 === 0 ? 'table-row-even' : 'table-row-odd'}
 									>
 										<TableCell component='th' scope='row'>
 											{row.firstName}
@@ -179,7 +179,7 @@ export default function StudentTable() {
 						page={page}
 						onPageChange={handleChangePage}
 						onRowsPerPageChange={handleChangeRowsPerPage}
-						style={{ backgroundColor: '#a08eb9' }}
+						sx={{ backgroundColor: '#a08eb9' }}
 					/>
 				</Paper>
 

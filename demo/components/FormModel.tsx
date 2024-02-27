@@ -56,7 +56,7 @@ export default function FormModel({
 		const fetchData = async () => {
 			try {
 				const response = await axios.get(
-					`http://localhost:3000/api/users/${id}`
+					`${apiUrl}/${id}`
 				)
 				setCurrent(response.data.user)
 				setSelectedGender(response.data.user?.gender || '')
@@ -115,7 +115,7 @@ export default function FormModel({
 					variant='contained'
 					color='primary'
 					onClick={handleOpen}
-					style={{ backgroundColor: '#544765' }}
+					sx={{ backgroundColor: '#544765' }}
 				>
 					Add data
 				</Button>
@@ -126,10 +126,10 @@ export default function FormModel({
 				aria-labelledby='modal-modal-title'
 				aria-describedby='modal-modal-description'
 			>
-				<Box sx={style}>
+				<Box sx={style} className='student-registry-form-container'>
 					<Typography
 						variant='h3'
-						style={{
+						sx={{
 							textAlign: 'center',
 							marginBottom: '30px',
 							fontSize: '2.2rem',
@@ -268,7 +268,7 @@ export default function FormModel({
 								type='submit'
 								variant='contained'
 								color='primary'
-								style={{ marginTop: 20, backgroundColor: '#544765' }}
+								sx={{ marginTop: 20, backgroundColor: '#544765' }}
 							>
 								Submit
 							</Button>

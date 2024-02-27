@@ -14,3 +14,34 @@
 .heading {
     margin-bottom: 30px;
 }
+
+// $mobile-screen-size: 600px;
+
+// .details {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   flex-direction: column;
+//   flex-wrap: wrap;
+//   margin: 8.5rem;
+
+//   @media (max-width: $mobile-screen-size) {
+//     margin: 2rem;
+//   }
+// }
+
+// .details p {
+//   padding: 10px;
+
+//   @media (max-width: $mobile-screen-size) {
+//     padding: 5px;
+//   }
+// }
+
+// .heading {
+//   margin-bottom: 30px;
+
+//   @media (max-width: $mobile-screen-size) {
+//     margin-bottom: 15px;
+//   }
+// }

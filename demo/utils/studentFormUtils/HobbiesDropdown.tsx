@@ -77,7 +77,7 @@ export default function HobbiesDropdown({
 						<MenuItem
 							key={name}
 							value={name}
-							style={getStyles(name, personName, theme)}
+							sx={getStyles(name, personName, theme)}
 						>
 							{name}
 						</MenuItem>
