@@ -1,3 +1,32 @@
+/**
+ * FormModel Component
+ *
+ * This component represents a modal form for student registration or editing.
+ *
+ * @component
+ *
+ * @param {object} props - The properties passed to the component.
+ * @param {string} [props.id] - The ID of the student for editing. If present, the form is in edit mode.
+ * @param {React.Dispatch<React.SetStateAction<string | null>>} [props.onClose] - A function to handle modal closure.
+ *
+ * @returns {React.ReactElement} The rendered form modal component.
+ *
+ * @example
+ * // Usage of the FormModel component:
+ * // Import the FormModel component and use it in your component.
+ * import FormModel from './FormModel';
+ *
+ * // Use the FormModel component with optional parameters.
+ * const MyComponent = () => {
+ *   const handleClose = (id) => {
+ *     // Handle modal closure
+ *   };
+ *
+ *   return (
+ *     <FormModel id="123" onClose={handleClose} />
+ *   );
+ * };
+ */
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'

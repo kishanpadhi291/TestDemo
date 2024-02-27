@@ -1,3 +1,24 @@
+/**
+ * StudentTable Component
+ *
+ * This component displays a table of student data with search, edit, and delete functionalities.
+ *
+ * @component
+ *
+ * @returns {React.ReactElement} The rendered student table component.
+ *
+ * @example
+ * // Usage of the StudentTable component:
+ * // Import the StudentTable component and use it in your component.
+ * import StudentTable from './StudentTable';
+ *
+ * // Use the StudentTable component.
+ * const MyComponent = () => {
+ *   return (
+ *     <StudentTable />
+ *   );
+ * };
+ */
 'use client'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {

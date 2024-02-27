@@ -1,3 +1,25 @@
+/**
+ * Root Layout Component
+ *
+ * The RootLayout component wraps the entire application with the StoreProvider,
+ * sets the language attribute for HTML, and applies the Inter font styling to the body.
+ *
+ * @component
+ *
+ * @param {object} props - The properties of the component.
+ * @param {React.ReactNode} props.children - The child components to be rendered within the RootLayout.
+ *
+ * @returns {React.ReactNode} The rendered RootLayout component.
+ *
+ * @example
+ * // Usage in a Next.js page:
+ * import RootLayout from '@/components/layout/RootLayout';
+ * const MyPage = () => (
+ *   <RootLayout>
+ *     {/* Your page content here *\/}
+ *   </RootLayout>
+ * );
+ */
 import { StoreProvider } from '@/lib/store/StoreProvider'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'

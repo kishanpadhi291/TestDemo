@@ -1,3 +1,26 @@
+/**
+ * @module HobbiesDropdown
+ * @description
+ * HobbiesDropdown component for rendering a dropdown to select hobbies.
+ *
+ * @param {Object} props - React component props.
+ * @param {undefined|string|string[]} [props.defaultValue] - Optional default value for selected hobbies.
+ *
+ * @returns {React.ReactNode} - JSX rendering the hobbies dropdown component.
+ *
+ * @example
+ * // Usage in a component:
+ * import HobbiesDropdown from '@/path/to/HobbiesDropdown';
+ *
+ * const MyComponent = () => {
+ *   return (
+ *     <HobbiesDropdown
+ *       defaultValue={['Reading', 'Coding']}
+ *     />
+ *   );
+ * };
+ */
+
 // Import necessary React components and Material-UI elements
 import React, { useEffect, useMemo, useCallback } from 'react'
 import { Theme, useTheme } from '@mui/material/styles'

@@ -1,3 +1,31 @@
+/**
+ * @module DatePicker
+ * @description
+ * DatePicker component for rendering a date picker with specific formatting.
+ * Utilizes the `DatePicker` component from `@mui/x-date-pickers` with Day.js as the date adapter.
+ *
+ * @param {Object} props - React component props.
+ * @param {string} props.label - Display label for the date picker.
+ * @param {string} props.name - Unique name for the date picker.
+ * @param {string} [props.value] - Optional value representing the initial date. Should be in the format 'DD/MM/YYYY'.
+ *
+ * @returns {React.ReactNode} - JSX rendering the date picker component.
+ *
+ * @example
+ * // Usage in a component:
+ * import DatePicker from '@/path/to/DatePicker';
+ *
+ * const MyComponent = () => {
+ *   return (
+ *     <DatePicker
+ *       label="Select Date"
+ *       name="dob"
+ *       value="01/01/2000"
+ *     />
+ *   );
+ * };
+ */
+
 // Import necessary components and libraries for date picking
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
