@@ -16,10 +16,8 @@ import {
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import { useAppDispatch } from '@/lib/hooks/hooks'
-import { apiUrl, dataAdded, getStudentsById } from '@/lib/FormSlice'
-import { useSelector } from 'react-redux'
-import { StoreState } from '@/lib/store/store'
-import { useRouter } from 'next/navigation'
+import { apiUrl, Students, dataAdded } from '@/lib/FormSlice'
+import { useEffect, useState } from 'react'
 import HobbiesDropdown from '@/utils/studentFormUtils/HobbiesDropdown'
 import DatePicker from '@/utils/studentFormUtils/DatePicker'
 const style = {
@@ -32,7 +30,7 @@ const style = {
 	boxShadow: 24,
 	p: 4,
 	backgroundColor: '#8EC5FC',
-	backgroundImage: 'linear-gradient(62deg, #c9e4ff 0%, #e5caff 100%)'
+	backgroundImage: 'linear-gradient(62deg, #c9e4ff 0%, #e5caff 100%)',
 }
 
 export default function FormModel({
@@ -43,8 +41,10 @@ export default function FormModel({
 	onClose?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
 	const [open, setOpen] = React.useState(false)
-	const router = useRouter()
-	const current = useSelector((state: StoreState) => state.form.currentStudent)
+	const [current, setCurrent] = React.useState<Students>()
+	const [selectedGender, setSelectedGender] = useState('')
+	const [selectedDepartment, setSelectedDepartment] = useState('')
+	const [selectedHobbies, setSelectedHobbies] = useState<string[]>([])
 	const dispatch = useAppDispatch()
 	const handleOpen = () => setOpen(true)
 	const handleClose = () => {
@@ -52,13 +52,28 @@ export default function FormModel({
 		onClose?.(null)
 		id = undefined
 	}
-
 	React.useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get(
+					`http://localhost:3000/api/users/${id}`
+				)
+				setCurrent(response.data.user)
+				setSelectedGender(response.data.user?.gender || '')
+				setSelectedDepartment(response.data.user?.department || '')
+				setSelectedHobbies(response.data.user?.hobbies || [])
+				console.log(response.data.user)
+			} catch (error) {
+				console.error('Error fetching data:', error)
+			}
+		}
+
 		if (id) {
 			setOpen(true)
-			dispatch(getStudentsById(id))
+			fetchData()
 		}
-	}, [id, current])
+	}, [id])
+
 	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e?.preventDefault()
 		const formData = new FormData(e.target as HTMLFormElement)
@@ -75,10 +90,7 @@ export default function FormModel({
 			hobbies: formData.get('hobbies'),
 		}
 		if (id) {
-			const res = await axios.put(
-				`${apiUrl}/${id}`,
-				student
-			)
+			const res = await axios.put(`${apiUrl}/${id}`, student)
 			if (res.status === 200) {
 				alert('Sucessfully updated data')
 				dispatch(dataAdded())
@@ -99,7 +111,12 @@ export default function FormModel({
 		<div>
 			<ToastContainer />
 			<Box textAlign='center' sx={{ whiteSpace: 'pre' }}>
-				<Button variant='contained' color='primary' onClick={handleOpen} style={{ backgroundColor: '#544765' }}>
+				<Button
+					variant='contained'
+					color='primary'
+					onClick={handleOpen}
+					style={{ backgroundColor: '#544765' }}
+				>
 					Add data
 				</Button>
 			</Box>
@@ -110,11 +127,14 @@ export default function FormModel({
 				aria-describedby='modal-modal-description'
 			>
 				<Box sx={style}>
-					<Typography variant='h3' style={{
-						textAlign: 'center',
-						marginBottom: '30px',
-						fontSize: '2.2rem',
-					}}>
+					<Typography
+						variant='h3'
+						style={{
+							textAlign: 'center',
+							marginBottom: '30px',
+							fontSize: '2.2rem',
+						}}
+					>
 						Student Registration Form
 					</Typography>
 					<form onSubmit={submitHandler}>
@@ -123,7 +143,7 @@ export default function FormModel({
 								<TextField
 									label='First Name'
 									name='firstName'
-									defaultValue={id ? current.firstName : ''}
+									defaultValue={id && current ? current.firstName : ''}
 									fullWidth
 									required
 								/>
@@ -132,7 +152,7 @@ export default function FormModel({
 								<TextField
 									label='Middle Name'
 									name='middleName'
-									defaultValue={id ? current.middleName : ''}
+									defaultValue={id && current ? current.middleName : ''}
 									fullWidth
 									required
 								/>
@@ -141,7 +161,7 @@ export default function FormModel({
 								<TextField
 									label='Surname'
 									name='lastName'
-									defaultValue={id ? current.lastName : ''}
+									defaultValue={id && current ? current.lastName : ''}
 									fullWidth
 									required
 								/>
@@ -153,7 +173,7 @@ export default function FormModel({
 									label='Email'
 									name='email'
 									type='email'
-									defaultValue={id ? current.email : ''}
+									defaultValue={id && current ? current.email : ''}
 									fullWidth
 									margin='normal'
 									required
@@ -164,7 +184,7 @@ export default function FormModel({
 									label='Contact'
 									name='contactNumber'
 									type='number'
-									defaultValue={id ? current.contactNumber : ''}
+									defaultValue={id && current ? current.contactNumber : ''}
 									fullWidth
 									margin='normal'
 									required
@@ -181,9 +201,9 @@ export default function FormModel({
 									<Select
 										label='Gender'
 										name='gender'
-										defaultValue={id ? current.gender : ''}
+										value={selectedGender}
+										onChange={(e) => setSelectedGender(e.target.value)}
 									>
-										{/* <MenuItem value='select' disabled>Select</MenuItem> */}
 										<MenuItem value='male'>Male</MenuItem>
 										<MenuItem value='female'>Female</MenuItem>
 										<MenuItem value='other'>Other</MenuItem>
@@ -197,7 +217,7 @@ export default function FormModel({
 									label='College Name'
 									name='collegeName'
 									type='text'
-									defaultValue={id ? current.collegeName : ''}
+									defaultValue={id && current ? current.collegeName : ''}
 									fullWidth
 									margin='normal'
 									required
@@ -209,9 +229,9 @@ export default function FormModel({
 									<Select
 										label='Department'
 										name='department'
-										defaultValue={id ? current.department : ''}
+										value={selectedDepartment}
+										onChange={(e) => setSelectedDepartment(e.target.value)}
 									>
-										{/* <MenuItem value='select' disabled>Select</MenuItem> */}
 										<MenuItem value='IT'>IT</MenuItem>
 										<MenuItem value='CE'>CE</MenuItem>
 										<MenuItem value='CS'>CS</MenuItem>
@@ -222,19 +242,34 @@ export default function FormModel({
 						</Grid>
 						<Grid container spacing={2} mt={0.1}>
 							<Grid item xs={4}>
-								<HobbiesDropdown defaultValue={id ? current.hobbies : undefined} />
+								{current && (
+									<HobbiesDropdown defaultValue={selectedHobbies} />
+								)}
+								{!current && (
+									<HobbiesDropdown defaultValue={selectedHobbies} />
+								)}
 							</Grid>
 							<Grid item xs={4}>
-								<DatePicker
-									label='DOB'
-									name='dob'
-									value={id ? current.dob : ''}
-								/>
+								{current && (
+									<DatePicker
+										label='DOB'
+										name='dob'
+										value={id && current ? current.dob : ''}
+									/>
+								)}
+								{!current && (
+									<DatePicker label='DOB' name='dob' value={''} />
+								)}
 							</Grid>
 						</Grid>
 
 						<Grid container justifyContent='center'>
-							<Button type='submit' variant='contained' color='primary' style={{ marginTop: 20, backgroundColor: '#544765' }}>
+							<Button
+								type='submit'
+								variant='contained'
+								color='primary'
+								style={{ marginTop: 20, backgroundColor: '#544765' }}
+							>
 								Submit
 							</Button>
 						</Grid>

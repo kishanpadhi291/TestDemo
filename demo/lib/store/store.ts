@@ -5,7 +5,6 @@ export interface StoreState {
 	form: {
 		students: Students[]
 		added: number
-		currentStudent: Students
 	}
 }
 

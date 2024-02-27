@@ -18,22 +18,8 @@ export interface Students {
 const initialState: {
 	students: Students[]
 	added: number
-	currentStudent: Students
 } = {
 	students: [],
-	currentStudent: {
-		_id: '',
-		firstName: '',
-		middleName: '',
-		lastName: '',
-		email: '',
-		contactNumber: 0,
-		gender: '',
-		collegeName: '',
-		department: '',
-		hobbies: [''],
-		dob: '',
-	},
 	added: 0,
 }
 
@@ -51,18 +37,6 @@ export const getStudents = createAsyncThunk(
 		}
 	}
 )
-export const getStudentsById = createAsyncThunk(
-	'Form/studentbyid',
-	async (id: string, { rejectWithValue }) => {
-		console.log(id)
-		try {
-			const response = await axios.get(`${apiUrl}/${id}`)
-			return response.data.student
-		} catch (error) {
-			return rejectWithValue(error)
-		}
-	}
-)
 const formSlice = createSlice({
 	initialState,
 	name: 'formSlice',
@@ -75,9 +49,6 @@ const formSlice = createSlice({
 	extraReducers: (builder) => {
 		builder.addCase(getStudents.fulfilled, (state, action: any) => {
 			state.students = action.payload
-		})
-		builder.addCase(getStudentsById.fulfilled, (state, action: any) => {
-			state.currentStudent = action.payload
 		})
 	},
 })
