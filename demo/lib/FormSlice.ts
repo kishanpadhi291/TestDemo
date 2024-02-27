@@ -37,11 +37,13 @@ const initialState: {
 	added: 0,
 }
 
+export const apiUrl = process.env.NEXT_PUBLIC_API_URL!
+
 export const getStudents = createAsyncThunk(
 	'Form/students',
 	async (_, { rejectWithValue }) => {
 		try {
-			const response = await axios.get('http://localhost:3000/api/users')
+			const response = await axios.get(apiUrl)
 			console.log(response.data.users)
 			return response.data.users
 		} catch (error) {
@@ -51,10 +53,10 @@ export const getStudents = createAsyncThunk(
 )
 export const getStudentsById = createAsyncThunk(
 	'Form/studentbyid',
-	async (id, { rejectWithValue }) => {
+	async (id: string, { rejectWithValue }) => {
 		console.log(id)
 		try {
-			const response = await axios.get(`http://localhost:3000/api/users/${id}`)
+			const response = await axios.get(`${apiUrl}/${id}`)
 			return response.data.user
 		} catch (error) {
 			return rejectWithValue(error)

@@ -1,15 +1,8 @@
-import FormModel from '@/components/FormModel'
-import Table from '@/components/Table'
-import connectDB from '@/utils/connectDB'
-
-// connectDB()
+import Table from '@/components/Table/Table'
 
 const page = () => {
 	return (
-		<>
-			<FormModel />
-			<Table />
-		</>
+		<Table />
 	)
 }
 export default page

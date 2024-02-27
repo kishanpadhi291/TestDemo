@@ -6,13 +6,13 @@ import { NextResponse, NextRequest } from 'next/server'
 export async function GET() {
 	await connectDB()
 	const users = await User.find()
-	return NextResponse.json({ results: users.length, users })
+
+	return NextResponse.json({ results: users.length, users }, { status: 200 })
 }
 
 //create a new user
 export async function POST(request: NextRequest) {
 	await connectDB()
-
 	const {
 		firstName,
 		middleName,
@@ -39,8 +39,6 @@ export async function POST(request: NextRequest) {
 		dob,
 	})
 	await newUser.save()
-	return NextResponse.json(
-		{ message: 'User Created Successfully!', data: newUser },
-		{ status: 201 }
-	)
+
+	return NextResponse.json({ message: 'User Created Successfully!', data: newUser }, { status: 201 })
 }

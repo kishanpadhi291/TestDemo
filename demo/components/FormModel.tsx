@@ -17,7 +17,7 @@ import {
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import { useAppDispatch } from '@/lib/hooks/hooks'
-import { dataAdded, getStudentsById } from '@/lib/FormSlice'
+import { apiUrl, dataAdded, getStudentsById } from '@/lib/FormSlice'
 import { useSelector } from 'react-redux'
 import { StoreState } from '@/lib/store/store'
 import { useRouter } from 'next/navigation'
@@ -30,6 +30,8 @@ const style = {
 	bgcolor: 'background.paper',
 	boxShadow: 24,
 	p: 4,
+	backgroundColor: '#8EC5FC',
+	backgroundImage: 'linear-gradient(62deg, #c9e4ff 0%, #e5caff 100%)'
 }
 
 export default function FormModel({
@@ -41,6 +43,7 @@ export default function FormModel({
 }) {
 	const [open, setOpen] = React.useState(false)
 	const router = useRouter()
+	const current = useSelector((state: StoreState) => state.form.currentStudent)
 	const dispatch = useAppDispatch()
 	const handleOpen = () => setOpen(true)
 	const handleClose = () => {
@@ -48,7 +51,7 @@ export default function FormModel({
 		onClose?.(null)
 		id = undefined
 	}
-	const current = useSelector((state: StoreState) => state.form.currentStudent)
+
 	React.useEffect(() => {
 		if (id) {
 			setOpen(true)
@@ -72,7 +75,7 @@ export default function FormModel({
 		}
 		if (id) {
 			const res = await axios.put(
-				`http://localhost:3000/api/users/${id}`,
+				`${apiUrl}/${id}`,
 				student
 			)
 			if (res.status === 200) {
@@ -82,7 +85,7 @@ export default function FormModel({
 				setOpen(false)
 			}
 		} else {
-			const res = await axios.post('http://localhost:3000/api/users', student)
+			const res = await axios.post(apiUrl, student)
 			if (res.status === 201) {
 				alert('Sucessfully added data')
 				dispatch(dataAdded())
@@ -94,8 +97,8 @@ export default function FormModel({
 	return (
 		<div>
 			<ToastContainer />
-			<Box textAlign='center' mt={2}>
-				<Button variant='contained' color='primary' onClick={handleOpen}>
+			<Box textAlign='center' sx={{ whiteSpace: 'pre' }}>
+				<Button variant='contained' color='primary' onClick={handleOpen} style={{ backgroundColor: '#544765' }}>
 					Add data
 				</Button>
 			</Box>
@@ -106,8 +109,12 @@ export default function FormModel({
 				aria-describedby='modal-modal-description'
 			>
 				<Box sx={style}>
-					<Typography variant='h3' style={{ textAlign: 'center' }}>
-						Form
+					<Typography variant='h3' style={{
+						textAlign: 'center',
+						marginBottom: '30px',
+						fontSize: '2.2rem',
+					}}>
+						Student Registration Form
 					</Typography>
 					<form onSubmit={submitHandler}>
 						<Grid container spacing={2}>
@@ -214,7 +221,7 @@ export default function FormModel({
 						</Grid>
 						<Grid container spacing={2} mt={0.1}>
 							<Grid item xs={4}>
-								<MultipleSelectChip dvalue={id ? current.hobbies : undefined} />
+								<MultipleSelectChip defaultValue={id ? current.hobbies : undefined} />
 							</Grid>
 							<Grid item xs={4}>
 								<FormDatePicker
@@ -226,7 +233,7 @@ export default function FormModel({
 						</Grid>
 
 						<Grid container justifyContent='center'>
-							<Button type='submit' variant='contained' color='primary'>
+							<Button type='submit' variant='contained' color='primary' style={{ marginTop: 20, backgroundColor: '#544765' }}>
 								Submit
 							</Button>
 						</Grid>

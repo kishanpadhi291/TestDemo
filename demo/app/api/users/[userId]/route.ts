@@ -3,8 +3,8 @@ import connectDB from '@/utils/connectDB'
 import { NextResponse, NextRequest } from 'next/server'
 
 // get user by Id
-export async function GET(request: NextRequest, { params }: any) {
-	// await connectDB()
+export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
+	await connectDB()
 	const { userId } = params
 
 	const user = await User.findById({ _id: userId })
@@ -16,12 +16,13 @@ export async function GET(request: NextRequest, { params }: any) {
 			{ status: 404 }
 		)
 	}
-	return NextResponse.json({ status: 'success', user })
+	
+	return NextResponse.json({ status: 'success', user }, { status: 200 })
 }
 
 // update user by Id
-export async function PUT(request: NextRequest, { params }: any) {
-	// await connectDB()
+export async function PUT(request: NextRequest, { params }: { params: { userId: string } }) {
+	await connectDB()
 	const { userId } = params
 
 	const {
@@ -59,14 +60,12 @@ export async function PUT(request: NextRequest, { params }: any) {
 		)
 	}
 
-	return NextResponse.json({
-		message: 'User Updated Successfully!',
-	})
+	return NextResponse.json({ message: 'User Updated Successfully!' }, { status: 200 })
 }
 
 // delete user by Id
-export async function DELETE(request: NextRequest, { params }: any) {
-	// await connectDB()
+export async function DELETE(request: NextRequest, { params }: { params: { userId: string } }) {
+	await connectDB()
 	const { userId } = params
 
 	const user = await User.findByIdAndDelete({ _id: userId })
@@ -78,8 +77,6 @@ export async function DELETE(request: NextRequest, { params }: any) {
 			{ status: 404 }
 		)
 	}
-	return NextResponse.json({
-		status: 'success',
-		message: 'User Deleted Successfully!',
-	})
+
+	return NextResponse.json({ status: 'success', message: 'User Deleted Successfully!' }, { status: 204 })
 }

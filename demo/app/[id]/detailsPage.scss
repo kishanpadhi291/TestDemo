@@ -1,0 +1,16 @@
+.details{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 8.5rem;
+}
+
+.details p{
+    padding: 10px;
+}
+
+.heading {
+    margin-bottom: 30px;
+}

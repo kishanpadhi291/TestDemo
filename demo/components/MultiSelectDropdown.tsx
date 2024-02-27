@@ -18,10 +18,10 @@ const MenuProps = {
 			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
 			width: 250,
 		},
-	},
+	},	
 }
 
-const names = [
+const hobbies = [
 	'Singing',
 	'Dancing',
 	'Cycling',
@@ -44,16 +44,16 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 }
 
 export default function MultipleSelectChip({
-	dvalue,
+	defaultValue,
 }: {
-	dvalue?: undefined | [string]
+	defaultValue?: undefined | [string]
 }) {
 	const theme = useTheme()
 	const [personName, setPersonName] = React.useState<string[]>([])
 	useEffect(() => {
-		// Update the state when dvalue changes
-		if (dvalue) {
-			setPersonName(dvalue)
+		// Update the state when defaultValue changes
+		if (defaultValue) {
+			setPersonName(defaultValue)
 		}
 	}, [])
 	const handleChange = (event: SelectChangeEvent<typeof personName>) => {
@@ -84,7 +84,7 @@ export default function MultipleSelectChip({
 					)}
 					MenuProps={MenuProps}
 				>
-					{names.map((name) => (
+					{hobbies.map((name) => (
 						<MenuItem
 							key={name}
 							value={name}

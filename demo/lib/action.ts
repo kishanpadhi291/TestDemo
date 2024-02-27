@@ -3,6 +3,7 @@
 import axios from 'axios'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { apiUrl } from './FormSlice'
 
 export async function submitForm(formData: FormData) {
 	const student = {
@@ -17,7 +18,7 @@ export async function submitForm(formData: FormData) {
 		dob: formData.get('dob'),
 		hobbies: formData.get('hobbies'),
 	}
-	const res = await axios.post('http://localhost:3000/api/users', student)
+	const res = await axios.post(apiUrl, student)
 	if (res.status === 201) {
 		revalidatePath('/')
 		redirect('/')

@@ -12,12 +12,15 @@ import {
 	TablePagination,
 	Tooltip,
 	IconButton,
+	Container,
+	Box,
 } from '@mui/material'
+import './table.scss'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useRouter } from 'next/navigation'
-import FormModel from './FormModel'
-import { Students, dataAdded, getStudents } from '@/lib/FormSlice'
+import FormModel from '../FormModel'
+import { Students, apiUrl, dataAdded, getStudents } from '@/lib/FormSlice'
 import { useSelector } from 'react-redux'
 import { StoreState } from '@/lib/store/store'
 import { useAppDispatch } from '@/lib/hooks/hooks'
@@ -51,7 +54,7 @@ export default function BasicTable() {
 
 	const handleDeleteClick = async (data: string) => {
 		console.log('Delete clicked with data:', data)
-		const res = await axios.delete(`http://localhost:3000/api/users/${data}`)
+		const res = await axios.delete(`${apiUrl}/${data}`)
 		if (res.status === 200) {
 			alert('Student deleted successfully')
 			dispatch(dataAdded())
@@ -99,80 +102,89 @@ export default function BasicTable() {
 	}, [searched, studentsdata])
 	return (
 		<>
-			<Paper style={{ margin: '1%' }}>
-				<TextField
-					variant='outlined'
-					fullWidth
-					placeholder='Search...'
-					value={searched}
-					onChange={(e) => requestSearch(e.target.value)}
-				/>
-				<TableContainer>
-					<Table aria-label='simple table'>
-						<TableHead>
-							<TableRow>
-								<TableCell style={{ fontWeight: 'bold' }}>Firstname</TableCell>
-								<TableCell align='right' style={{ fontWeight: 'bold' }}>
-									Email
-								</TableCell>
-								<TableCell align='right' style={{ fontWeight: 'bold' }}>
-									Gender
-								</TableCell>
-								<TableCell align='right' style={{ fontWeight: 'bold' }}>
-									Actions
-								</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{getRowsForCurrentPage.map((row) => (
-								<TableRow
-									key={row._id}
-									onClick={() => handleRowClick(row._id)}
-									style={{ cursor: 'pointer' }}
-								>
-									<TableCell component='th' scope='row'>
-										{row.firstName}
+			<Container fixed maxWidth="lg">
+				<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+					<TextField
+						variant='outlined'
+						fullWidth
+						placeholder='Search...'
+						value={searched}
+						onChange={(e) => requestSearch(e.target.value)}
+						style={{ margin: '24px 0' }}
+					/>
+					<FormModel />
+				</Box>
+				<Paper style={{ margin: '0 auto' }}>
+					<TableContainer>
+						<Table aria-label='simple table'>
+							<TableHead style={{ backgroundColor: '#a08eb9' }}			>
+								<TableRow>
+									<TableCell style={{ fontWeight: 'bold' }}>Firstname</TableCell>
+									<TableCell align='right' style={{ fontWeight: 'bold' }}>
+										Email
 									</TableCell>
-									<TableCell align='right'>{row.email}</TableCell>
-									<TableCell align='right'>{row.gender}</TableCell>
-									<TableCell align='right'>
-										<Tooltip title='Edit'>
-											<IconButton
-												onClick={(e) => {
-													e.stopPropagation()
-													handleEditClick(row._id)
-												}}
-											>
-												<EditIcon />
-											</IconButton>
-										</Tooltip>
-										<Tooltip title='Delete'>
-											<IconButton
-												onClick={(e) => {
-													e.stopPropagation()
-													handleDeleteClick(row._id)
-												}}
-											>
-												<DeleteIcon />
-											</IconButton>
-										</Tooltip>
+									<TableCell align='right' style={{ fontWeight: 'bold' }}>
+										Gender
+									</TableCell>
+									<TableCell align='right' style={{ fontWeight: 'bold' }}>
+										Actions
 									</TableCell>
 								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</TableContainer>
-				<TablePagination
-					rowsPerPageOptions={[5, 10, 25]}
-					component='div'
-					count={rows.length}
-					rowsPerPage={rowsPerPage}
-					page={page}
-					onPageChange={handleChangePage}
-					onRowsPerPageChange={handleChangeRowsPerPage}
-				/>
-			</Paper>
-			{editData && <FormModel id={editData} onClose={setEditData} />}
+							</TableHead>
+							<TableBody>
+								{getRowsForCurrentPage.map((row, index) => (
+									<TableRow
+										key={row._id}
+										onClick={() => handleRowClick(row._id)}
+										style={{ cursor: 'pointer' }}
+										className={index % 2 === 0 ? 'table-row-even' : 'table-row-odd'} // Apply the styles here
+									>
+										<TableCell component='th' scope='row'>
+											{row.firstName}
+										</TableCell>
+										<TableCell align='right'>{row.email}</TableCell>
+										<TableCell align='right'>{row.gender}</TableCell>
+										<TableCell align='right'>
+											<Tooltip title='Edit'>
+												<IconButton
+													onClick={(e) => {
+														e.stopPropagation()
+														handleEditClick(row._id)
+													}}
+												>
+													<EditIcon />
+												</IconButton>
+											</Tooltip>
+											<Tooltip title='Delete'>
+												<IconButton
+													onClick={(e) => {
+														e.stopPropagation()
+														handleDeleteClick(row._id)
+													}}
+												>
+													<DeleteIcon />
+												</IconButton>
+											</Tooltip>
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</TableContainer>
+					<TablePagination
+						rowsPerPageOptions={[5, 10, 25]}
+						component='div'
+						count={rows.length}
+						rowsPerPage={rowsPerPage}
+						page={page}
+						onPageChange={handleChangePage}
+						onRowsPerPageChange={handleChangeRowsPerPage}
+						style={{ backgroundColor: '#a08eb9' }}
+					/>
+				</Paper>
+
+				{editData && <FormModel id={editData} onClose={setEditData} />}
+			</Container>
 		</>
 	)
 }
