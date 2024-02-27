@@ -1,10 +1,14 @@
 import { StoreProvider } from '@/lib/store/StoreProvider'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import "./globals.scss";
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import './globals.scss'
 
+// Load the Inter font with the 'latin' subset
 const inter = Inter({ subsets: ['latin'] })
 
+// Metadata for the page
 export const metadata: Metadata = {
 	title: 'Student Registry',
 	description: 'Student CRUD operations',
@@ -13,16 +17,26 @@ export const metadata: Metadata = {
 	},
 }
 
-export default function RootLayout({
+// RootLayout component that wraps the entire application with StoreProvider
+// It sets the language attribute for HTML and applies the Inter font styling to the body
+const RootLayout = ({
 	children,
 }: Readonly<{
 	children: React.ReactNode
-}>) {
+}>) => {
 	return (
 		<StoreProvider>
+			{/* Define the HTML document with lang attribute */}
 			<html lang='en'>
-				<body className={inter.className}>{children}</body>
+				{/* Apply the Inter font styling to the body */}
+				<body className={inter.className}>
+					{/* Render the child components */}
+					{children}
+				</body>
 			</html>
 		</StoreProvider>
 	)
 }
+
+// Export the RootLayout component for use in the application.
+export default RootLayout

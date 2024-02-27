@@ -1,4 +1,3 @@
-
 export const hobbies = [
 	'Singing',
 	'Dancing',
@@ -6,8 +5,18 @@ export const hobbies = [
 	'Badminton',
 	'Reading',
 	'Watching',
-	'Miriam Wagner',
-	'Bradley Wilkerson',
-	'Virginia Andrews',
-	'Kelly Snyder',
+	'Cooking',
+	'Painting',
+	'Gardening',
+	'Hiking',
+	'Photography',
+	'Traveling',
+	'Writing',
+	'Gaming',
+	'Swimming',
+	'Coding',
+	'Playing musical instruments',
+	'Fishing',
+	'Yoga',
+	'Collecting stamps',
 ]

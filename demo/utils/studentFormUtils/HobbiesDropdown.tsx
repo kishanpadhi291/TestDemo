@@ -1,5 +1,5 @@
-'use client'
-import * as React from 'react'
+// Import necessary React components and Material-UI elements
+import React, { useEffect, useMemo, useCallback } from 'react'
 import { Theme, useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import OutlinedInput from '@mui/material/OutlinedInput'
@@ -8,9 +8,9 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Chip from '@mui/material/Chip'
-import { useEffect } from 'react'
 import { hobbies } from '../data/hobbies'
 
+// Constants for styling the dropdown
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
 const MenuProps = {
@@ -22,6 +22,7 @@ const MenuProps = {
 	},
 }
 
+// Function to determine the styling of each item in the dropdown
 function getStyles(name: string, personName: readonly string[], theme: Theme) {
 	return {
 		fontWeight:
@@ -31,29 +32,45 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 	}
 }
 
-export default function HobbiesDropdown({
+// HobbiesDropdown component
+const HobbiesDropdown = ({
 	defaultValue,
 }: {
 	defaultValue?: undefined | [string] | string[]
-}) {
+}) => {
 	const theme = useTheme()
 	const [personName, setPersonName] = React.useState<string[]>([])
+	// Use useMemo to memoize the styles calculation
+	const styles = useMemo(() => {
+		return hobbies.reduce((acc, name) => {
+			acc[name] = getStyles(name, personName, theme)
+			return acc
+		}, {} as Record<string, React.CSSProperties>)
+	}, [personName, theme])
+
+	// Set initial values based on defaultValue
 	useEffect(() => {
 		if (defaultValue) {
 			defaultValue.map((value) => {
 				setPersonName(typeof value === 'string' ? value.split(',') : value)
 			})
 		}
-	}, [])
-	const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-		const {
-			target: { value },
-		} = event
-		setPersonName(typeof value === 'string' ? value.split(',') : value)
-	}
+	}, [defaultValue])
+
+	// Handle change in selected items
+	const handleChange = useCallback(
+		(event: SelectChangeEvent<typeof personName>) => {
+			const {
+				target: { value },
+			} = event
+			setPersonName(typeof value === 'string' ? value.split(',') : value)
+		},
+		[]
+	)
 
 	return (
 		<div>
+			{/* Dropdown for selecting hobbies */}
 			<FormControl sx={{ width: '100%' }}>
 				<InputLabel id='demo-multiple-chip-label'>Hobbies</InputLabel>
 				<Select
@@ -61,11 +78,13 @@ export default function HobbiesDropdown({
 					id='demo-multiple-chip'
 					multiple
 					name='hobbies'
+					required
 					value={personName}
 					onChange={handleChange}
 					input={<OutlinedInput id='select-multiple-chip' label='Chip' />}
 					renderValue={(selected) => (
 						<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+							{/* Display selected hobbies as chips */}
 							{selected.map((value) => (
 								<Chip key={value} label={value} />
 							))}
@@ -73,12 +92,9 @@ export default function HobbiesDropdown({
 					)}
 					MenuProps={MenuProps}
 				>
+					{/* Render menu items for each hobby */}
 					{hobbies.map((name) => (
-						<MenuItem
-							key={name}
-							value={name}
-							sx={getStyles(name, personName, theme)}
-						>
+						<MenuItem key={name} value={name} sx={styles[name]}>
 							{name}
 						</MenuItem>
 					))}
@@ -87,3 +103,5 @@ export default function HobbiesDropdown({
 		</div>
 	)
 }
+
+export default HobbiesDropdown

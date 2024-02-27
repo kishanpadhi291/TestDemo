@@ -1,8 +1,8 @@
-'use client'
-import * as React from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
-
 import {
 	Button,
 	FormControl,
@@ -14,12 +14,11 @@ import {
 	Typography,
 } from '@mui/material'
 import axios from 'axios'
-import { ToastContainer, toast } from 'react-toastify'
 import { useAppDispatch } from '@/lib/hooks/hooks'
 import { apiUrl, Students, dataAdded } from '@/lib/FormSlice'
-import { useEffect, useState } from 'react'
 import HobbiesDropdown from '@/utils/studentFormUtils/HobbiesDropdown'
 import DatePicker from '@/utils/studentFormUtils/DatePicker'
+
 const style = {
 	position: 'absolute' as 'absolute',
 	top: '50%',
@@ -40,39 +39,52 @@ export default function FormModel({
 	id?: string
 	onClose?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
-	const [open, setOpen] = React.useState(false)
-	const [current, setCurrent] = React.useState<Students>()
+	const [open, setOpen] = useState(false)
+	const [current, setCurrent] = useState<Students>()
+	const [firstName, setFirstname] = useState('')
+	const [middleName, setMiddleName] = useState('')
+	const [lastName, setLastName] = useState('')
+	const [phoneNumber, setPhoneNumber] = useState('')
+	const [email, setStudentEmail] = useState('')
+	const [collegeName, setCollegeName] = useState('')
 	const [selectedGender, setSelectedGender] = useState('')
 	const [selectedDepartment, setSelectedDepartment] = useState('')
 	const [selectedHobbies, setSelectedHobbies] = useState<string[]>([])
 	const dispatch = useAppDispatch()
-	const handleOpen = () => setOpen(true)
-	const handleClose = () => {
+
+	// Memoized functions using useMemo and useCallback
+	const handleOpen = useCallback(() => setOpen(true), [])
+	const handleClose = useCallback(() => {
 		setOpen(false)
 		onClose?.(null)
 		id = undefined
-	}
-	React.useEffect(() => {
+	}, [onClose])
+
+	useEffect(() => {
+		// Fetch data memoized function
 		const fetchData = async () => {
 			try {
-				const response = await axios.get(
-					`${apiUrl}/${id}`
-				)
-				setCurrent(response.data.user)
-				setSelectedGender(response.data.user?.gender || '')
-				setSelectedDepartment(response.data.user?.department || '')
-				setSelectedHobbies(response.data.user?.hobbies || [])
-				console.log(response.data.user)
+				const response = await axios.get(`${apiUrl}/${id}`)
+				setCurrent(response.data.student)
+				setFirstname(response.data.student?.firstName || '')
+				setMiddleName(response.data.student?.middleName || '')
+				setLastName(response.data.student?.lastName || '')
+				setPhoneNumber(response.data.student?.contactNumber || '')
+				setStudentEmail(response.data.student?.email || '')
+				setCollegeName(response.data.student?.collegeName || '')
+				setSelectedGender(response.data.student?.gender || '')
+				setSelectedDepartment(response.data.student?.department || '')
+				setSelectedHobbies(response.data.student?.hobbies || [])
 			} catch (error) {
 				console.error('Error fetching data:', error)
 			}
 		}
 
 		if (id) {
-			setOpen(true)
+			handleOpen()
 			fetchData()
 		}
-	}, [id])
+	}, [id, handleOpen])
 
 	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e?.preventDefault()
@@ -90,32 +102,48 @@ export default function FormModel({
 			hobbies: formData.get('hobbies'),
 		}
 		if (id) {
-			const res = await axios.put(`${apiUrl}/${id}`, student)
-			if (res.status === 200) {
-				alert('Sucessfully updated data')
-				dispatch(dataAdded())
-				onClose?.(null)
-				setOpen(false)
+			try {
+				const res = await axios.put(`${apiUrl}/${id}`, student)
+				if (res.status === 200) {
+					dispatch(dataAdded())
+					toast.success('Student Data Updated Successfully')
+					onClose?.(null)
+					setOpen(false)
+				} else {
+					toast.error('Something went wrong')
+				}
+			} catch (error) {
+				toast.error(
+					'Email should be unique, email already registered with a different user'
+				)
 			}
 		} else {
-			const res = await axios.post(apiUrl, student)
-			if (res.status === 201) {
-				alert('Sucessfully added data')
-				dispatch(dataAdded())
-				onClose?.(null)
-				setOpen(false)
+			try {
+				const res = await axios.post(apiUrl, student)
+				if (res.status === 201) {
+					toast.success('Student Added Successfully')
+					dispatch(dataAdded())
+					onClose?.(null)
+					setOpen(false)
+				} else {
+					toast.error('Something went wrong')
+				}
+			} catch (error) {
+				toast.error(
+					'Email should be unique, email already registered with a different user'
+				)
 			}
 		}
 	}
+
 	return (
 		<div>
-			<ToastContainer />
 			<Box textAlign='center' sx={{ whiteSpace: 'pre' }}>
 				<Button
 					variant='contained'
 					color='primary'
 					onClick={handleOpen}
-					sx={{ backgroundColor: '#544765' }}
+					style={{ backgroundColor: '#544765' }}
 				>
 					Add data
 				</Button>
@@ -143,7 +171,8 @@ export default function FormModel({
 								<TextField
 									label='First Name'
 									name='firstName'
-									defaultValue={id && current ? current.firstName : ''}
+									value={firstName}
+									onChange={(e) => setFirstname(e.target.value)}
 									fullWidth
 									required
 								/>
@@ -152,7 +181,8 @@ export default function FormModel({
 								<TextField
 									label='Middle Name'
 									name='middleName'
-									defaultValue={id && current ? current.middleName : ''}
+									value={middleName}
+									onChange={(e) => setMiddleName(e.target.value)}
 									fullWidth
 									required
 								/>
@@ -161,7 +191,8 @@ export default function FormModel({
 								<TextField
 									label='Surname'
 									name='lastName'
-									defaultValue={id && current ? current.lastName : ''}
+									value={lastName}
+									onChange={(e) => setLastName(e.target.value)}
 									fullWidth
 									required
 								/>
@@ -173,7 +204,8 @@ export default function FormModel({
 									label='Email'
 									name='email'
 									type='email'
-									defaultValue={id && current ? current.email : ''}
+									value={email}
+									onChange={(e) => setStudentEmail(e.target.value)}
 									fullWidth
 									margin='normal'
 									required
@@ -184,7 +216,8 @@ export default function FormModel({
 									label='Contact'
 									name='contactNumber'
 									type='number'
-									defaultValue={id && current ? current.contactNumber : ''}
+									value={phoneNumber}
+									onChange={(e) => setPhoneNumber(e.target.value)}
 									fullWidth
 									margin='normal'
 									required
@@ -217,7 +250,8 @@ export default function FormModel({
 									label='College Name'
 									name='collegeName'
 									type='text'
-									defaultValue={id && current ? current.collegeName : ''}
+									value={collegeName}
+									onChange={(e) => setCollegeName(e.target.value)}
 									fullWidth
 									margin='normal'
 									required
@@ -242,12 +276,8 @@ export default function FormModel({
 						</Grid>
 						<Grid container spacing={2} mt={0.1}>
 							<Grid item xs={4}>
-								{current && (
-									<HobbiesDropdown defaultValue={selectedHobbies} />
-								)}
-								{!current && (
-									<HobbiesDropdown defaultValue={selectedHobbies} />
-								)}
+								{current && <HobbiesDropdown defaultValue={selectedHobbies} />}
+								{!current && <HobbiesDropdown defaultValue={selectedHobbies} />}
 							</Grid>
 							<Grid item xs={4}>
 								{current && (
@@ -257,20 +287,17 @@ export default function FormModel({
 										value={id && current ? current.dob : ''}
 									/>
 								)}
-								{!current && (
-									<DatePicker label='DOB' name='dob' value={''} />
-								)}
+								{!current && <DatePicker label='DOB' name='dob' value={''} />}
 							</Grid>
 						</Grid>
-
 						<Grid container justifyContent='center'>
 							<Button
 								type='submit'
 								variant='contained'
 								color='primary'
-								sx={{ marginTop: 20, backgroundColor: '#544765' }}
+								style={{ marginTop: 20, backgroundColor: '#544765' }}
 							>
-								Submit
+								{id ? 'Edit' : 'Submit'}
 							</Button>
 						</Grid>
 					</form>
