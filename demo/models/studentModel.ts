@@ -1,7 +1,6 @@
-// src/models/User.js
 import mongoose from 'mongoose'
 
-const userSchema = new mongoose.Schema({
+const studentSchema = new mongoose.Schema({
 	firstName: {
 		type: String,
 		required: [true, 'FirstName is required'],
@@ -48,6 +47,6 @@ const userSchema = new mongoose.Schema({
 	},
 })
 
-const User = mongoose.models.User || mongoose.model('User', userSchema)
+const Student = mongoose.models.Student || mongoose.model('Student', studentSchema)
 
-export default User
+export default Student

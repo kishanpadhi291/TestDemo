@@ -1,7 +1,7 @@
 .card-container {
     height: 500px;
     width: 450px;
-    color: white;
+    // color: white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,8 +9,8 @@
     flex-wrap: wrap;
     border-radius: 10px; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #FF3CAC;
-    background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+    background-color: #a08eb9;
+    background-image: linear-gradient(45deg, #d3b4dd 0%, #a693c0 50%, #ad99c9 100%);
 
     // styling for hover effect
     transition: box-shadow 0.3s ease-in-out;

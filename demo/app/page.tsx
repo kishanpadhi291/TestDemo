@@ -1,8 +1,8 @@
-import Table from '@/components/Table/Table'
+import StudentTable from '@/components/StudentTable/StudentTable'
 
 const page = () => {
 	return (
-		<Table />
+		<StudentTable />
 	)
 }
 export default page

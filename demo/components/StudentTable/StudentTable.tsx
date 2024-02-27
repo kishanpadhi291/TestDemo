@@ -15,7 +15,7 @@ import {
 	Container,
 	Box,
 } from '@mui/material'
-import './table.scss'
+import './studentTable.scss'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useRouter } from 'next/navigation'
@@ -26,7 +26,7 @@ import { StoreState } from '@/lib/store/store'
 import { useAppDispatch } from '@/lib/hooks/hooks'
 import axios from 'axios'
 
-export default function BasicTable() {
+export default function StudentTable() {
 	const router = useRouter()
 	const dispatch = useAppDispatch()
 	const studentsdata = useSelector((state: StoreState) => state.form.students)

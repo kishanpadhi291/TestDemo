@@ -2,8 +2,7 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
-import FormDatePicker from '@/components/FormDatePicker'
-import MultipleSelectChip from '@/components/MultiSelectDropdown'
+
 import {
 	Button,
 	FormControl,
@@ -21,6 +20,8 @@ import { apiUrl, dataAdded, getStudentsById } from '@/lib/FormSlice'
 import { useSelector } from 'react-redux'
 import { StoreState } from '@/lib/store/store'
 import { useRouter } from 'next/navigation'
+import HobbiesDropdown from '@/utils/studentFormUtils/HobbiesDropdown'
+import DatePicker from '@/utils/studentFormUtils/DatePicker'
 const style = {
 	position: 'absolute' as 'absolute',
 	top: '50%',
@@ -221,10 +222,10 @@ export default function FormModel({
 						</Grid>
 						<Grid container spacing={2} mt={0.1}>
 							<Grid item xs={4}>
-								<MultipleSelectChip defaultValue={id ? current.hobbies : undefined} />
+								<HobbiesDropdown defaultValue={id ? current.hobbies : undefined} />
 							</Grid>
 							<Grid item xs={4}>
-								<FormDatePicker
+								<DatePicker
 									label='DOB'
 									name='dob'
 									value={id ? current.dob : ''}

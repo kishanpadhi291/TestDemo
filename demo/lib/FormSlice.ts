@@ -44,8 +44,8 @@ export const getStudents = createAsyncThunk(
 	async (_, { rejectWithValue }) => {
 		try {
 			const response = await axios.get(apiUrl)
-			console.log(response.data.users)
-			return response.data.users
+			console.log(response.data.students)
+			return response.data.students
 		} catch (error) {
 			return rejectWithValue(error)
 		}
@@ -57,7 +57,7 @@ export const getStudentsById = createAsyncThunk(
 		console.log(id)
 		try {
 			const response = await axios.get(`${apiUrl}/${id}`)
-			return response.data.user
+			return response.data.student
 		} catch (error) {
 			return rejectWithValue(error)
 		}

@@ -1,10 +1,10 @@
 'use client'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { DatePicker as DOBDatePicker } from '@mui/x-date-pickers/DatePicker'
 import { format, parse } from 'date-fns'
 import dayjs from 'dayjs'
-const FormDatePicker = ({
+const DatePicker = ({
 	label,
 	name,
 	value,
@@ -15,7 +15,7 @@ const FormDatePicker = ({
 }) => {
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
-			<DatePicker
+			<DOBDatePicker
 				label={label}
 				name={name}
 				format='DD/MM/YYYY'
@@ -23,12 +23,12 @@ const FormDatePicker = ({
 				defaultValue={
 					value !== ''
 						? dayjs(
-								format(parse(value!, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd')
-						  )
+							format(parse(value!, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd')
+						)
 						: null
 				}
 			/>
 		</LocalizationProvider>
 	)
 }
-export default FormDatePicker
+export default DatePicker
