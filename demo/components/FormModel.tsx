@@ -241,8 +241,12 @@ export default function FormModel({
 						</Grid>
 						<Grid container spacing={2} mt={0.1}>
 							<Grid item xs={4}>
-								{current && <MultipleSelectChip dvalue={selectedHobbies} />}
-								{!current && <MultipleSelectChip dvalue={selectedHobbies} />}
+								{current && (
+									<MultipleSelectChip defaultValue={selectedHobbies} />
+								)}
+								{!current && (
+									<MultipleSelectChip defaultValue={selectedHobbies} />
+								)}
 							</Grid>
 							<Grid item xs={4}>
 								{current && (
@@ -253,11 +257,7 @@ export default function FormModel({
 									/>
 								)}
 								{!current && (
-									<FormDatePicker
-										label='DOB'
-										name='dob'
-										value={id && current ? current.dob : ''}
-									/>
+									<FormDatePicker label='DOB' name='dob' value={''} />
 								)}
 							</Grid>
 						</Grid>
