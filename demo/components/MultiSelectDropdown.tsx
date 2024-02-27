@@ -18,7 +18,7 @@ const MenuProps = {
 			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
 			width: 250,
 		},
-	},	
+	},
 }
 
 const hobbies = [
@@ -46,14 +46,15 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 export default function MultipleSelectChip({
 	defaultValue,
 }: {
-	defaultValue?: undefined | [string]
+	defaultValue?: undefined | [string] | string[]
 }) {
 	const theme = useTheme()
 	const [personName, setPersonName] = React.useState<string[]>([])
 	useEffect(() => {
-		// Update the state when defaultValue changes
 		if (defaultValue) {
-			setPersonName(defaultValue)
+			defaultValue.map((value) => {
+				setPersonName(typeof value === 'string' ? value.split(',') : value)
+			})
 		}
 	}, [])
 	const handleChange = (event: SelectChangeEvent<typeof personName>) => {

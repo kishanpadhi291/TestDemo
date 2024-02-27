@@ -1,7 +1,11 @@
 import { StoreProvider } from '@/lib/store/StoreProvider'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+<<<<<<< Updated upstream
 import "./globals.scss";
+=======
+import './globals.css'
+>>>>>>> Stashed changes
 
 const inter = Inter({ subsets: ['latin'] })
 
