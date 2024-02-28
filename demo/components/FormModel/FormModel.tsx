@@ -45,7 +45,7 @@ import {
 import axios from 'axios'
 import { useAppDispatch } from '@/lib/hooks/hooks'
 import { apiUrl, Students, dataAdded } from '@/lib/FormSlice'
-import HobbiesDropdown from '@/utils/studentFormUtils/HobbiesDropdown'
+import HobbiesDropdown from '@/utils/studentFormUtils/HobbiesDropdown/HobbiesDropdown'
 import DatePicker from '@/utils/studentFormUtils/DatePicker'
 
 const style = {

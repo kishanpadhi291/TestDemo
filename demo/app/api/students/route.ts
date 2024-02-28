@@ -23,7 +23,7 @@ interface CustomError extends Error {
 export async function GET() {
 	try {
 		await connectDB()
-		const students = await Student.find()
+		const students = await Student.find({}).sort({ _id: - 1 })
 		return NextResponse.json(
 			{ results: students.length, students },
 			{ status: 200 }

@@ -32,18 +32,19 @@ import React from 'react'
 import Card from '@/components/Card/Card'
 import { CardContent, Typography } from '@mui/material'
 import './detailsPage.scss'
-import { Students, apiUrl } from '@/lib/FormSlice'
+import { apiUrl } from '@/lib/FormSlice'
+import axios from 'axios'
 
-async function getStudentDetails(id: string): Promise<{ student: Students }> {
-	const res = await fetch(`${apiUrl}/${id}`, { cache: 'no-store' }) //will not store cache for this data
-	return res.json()
-}
 // This is a Next.js dynamic page component.
 // It receives the `params` object with 'id' parameter.
+
 const page = async ({ params }: { params: { id: string } }) => {
 	// Extract the `id` from the route parameters.
 	const id = params.id
-	const [data] = await Promise.all([getStudentDetails(id)])
+	// const response = await fetch(`${apiUrl}/${id}`, { cache: 'no-store' }) //will not store cache
+	// const data = await response.json()
+
+	const { data } = await axios.get(`${apiUrl}/${id}`)
 
 	// Render the details page.
 	return (
@@ -52,7 +53,7 @@ const page = async ({ params }: { params: { id: string } }) => {
 			<Card>
 				{/* Heading section */}
 				<div className='heading'>
-					<Typography variant='h2'>Details</Typography>
+					<Typography variant='h3' style={{ marginTop: '15px' }}>Details</Typography>
 				</div>
 
 				{/* Card content section */}

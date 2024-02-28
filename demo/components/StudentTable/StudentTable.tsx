@@ -41,13 +41,14 @@ import './studentTable.scss'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useRouter } from 'next/navigation'
-import FormModel from '../FormModel'
+import FormModel from '../FormModel/FormModel'
 import { Students, apiUrl, dataAdded, getStudents } from '@/lib/FormSlice'
 import { useSelector } from 'react-redux'
 import { StoreState } from '@/lib/store/store'
 import { useAppDispatch } from 'lib/hooks/hooks'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export default function StudentTable() {
 	const router = useRouter()
@@ -61,7 +62,7 @@ export default function StudentTable() {
 	const [editData, setEditData] = useState<string | null>(null)
 
 	useEffect(() => {
-		!studentsData.length && dispatch(getStudents())
+		!studentsData?.length && dispatch(getStudents())
 		setRows(studentsData)
 	}, [studentsData])
 
@@ -80,10 +81,14 @@ export default function StudentTable() {
 	const handleDeleteClick = useCallback(
 		async (data: string) => {
 			try {
-				const res = await axios.delete(`${apiUrl}/${data}`)
-				if (res.status === 200) {
-					dispatch(dataAdded())
-					toast.success('Student Deleted Successfully')
+				const result = confirm('Want to Delete?')
+				if (result) {
+
+					const res = await axios.delete(`${apiUrl}/${data}`)
+					if (res.status === 200) {
+						dispatch(dataAdded())
+						toast.success('Student Deleted Successfully')
+					}
 				}
 			} catch (error) {
 				console.error('Error deleting student:', error)
@@ -130,7 +135,7 @@ export default function StudentTable() {
 	const getRowsForCurrentPage = useMemo(() => {
 		const startIndex = page * rowsPerPage
 		const endIndex = startIndex + rowsPerPage
-		return rows.slice(startIndex, endIndex)
+		return rows?.slice(startIndex, endIndex)
 	}, [page, rows, rowsPerPage])
 
 	useEffect(() => {
@@ -166,7 +171,7 @@ export default function StudentTable() {
 						<Table aria-label='simple table'>
 							<TableHead sx={{ backgroundColor: '#a08eb9' }}>
 								<TableRow>
-									<TableCell sx={{ fontWeight: 'bold' }}>Firstname</TableCell>
+									<TableCell sx={{ fontWeight: 'bold' }}>FirstName</TableCell>
 									<TableCell align='right' sx={{ fontWeight: 'bold' }}>
 										Email
 									</TableCell>
@@ -182,7 +187,7 @@ export default function StudentTable() {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{getRowsForCurrentPage.map((row, index) => (
+								{getRowsForCurrentPage?.map((row, index) => (
 									<TableRow
 										key={row._id}
 										onClick={() => handleRowClick(row._id)}
@@ -198,6 +203,16 @@ export default function StudentTable() {
 										<TableCell align='right'>{row.contactNumber}</TableCell>
 										<TableCell align='right'>{row.gender}</TableCell>
 										<TableCell align='right'>
+											<Tooltip title='show'>
+												<IconButton
+													onClick={(e) => {
+														e.stopPropagation()
+														handleRowClick(row._id)
+													}}
+												>
+													<VisibilityIcon />
+												</IconButton>
+											</Tooltip>
 											<Tooltip title='Edit'>
 												<IconButton
 													onClick={(e) => {
@@ -227,7 +242,7 @@ export default function StudentTable() {
 					<TablePagination
 						rowsPerPageOptions={[5, 10, 25]}
 						component='div'
-						count={rows.length}
+						count={rows?.length}
 						rowsPerPage={rowsPerPage}
 						page={page}
 						onPageChange={handleChangePage}
