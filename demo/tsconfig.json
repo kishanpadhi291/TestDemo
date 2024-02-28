@@ -16,6 +16,10 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": ".",
+    "types": [
+      "@testing-library/jest-dom"
+    ],
     "plugins": [
       {
         "name": "next"
@@ -40,7 +44,9 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "test/demo.test.js",
+    "app/[id]/DetailsPage.test.tsx"
   ],
   "exclude": [
     "node_modules"
