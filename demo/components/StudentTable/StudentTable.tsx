@@ -45,7 +45,7 @@ import FormModel from '../FormModel'
 import { Students, apiUrl, dataAdded, getStudents } from '@/lib/FormSlice'
 import { useSelector } from 'react-redux'
 import { StoreState } from '@/lib/store/store'
-import { useAppDispatch } from '@/lib/hooks/hooks'
+import { useAppDispatch } from 'lib/hooks/hooks'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 

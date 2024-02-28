@@ -29,22 +29,21 @@
  * // Render the content wherever needed.
  */
 import React from 'react'
-import axios from 'axios'
 import Card from '@/components/Card/Card'
 import { CardContent, Typography } from '@mui/material'
 import './detailsPage.scss'
-import { apiUrl } from '@/lib/FormSlice'
+import { Students, apiUrl } from '@/lib/FormSlice'
 
+async function getStudentDetails(id: string): Promise<{ student: Students }> {
+	const res = await fetch(`${apiUrl}/${id}`, { cache: 'no-store' }) //will not store cache for this data
+	return res.json()
+}
 // This is a Next.js dynamic page component.
 // It receives the `params` object with 'id' parameter.
 const page = async ({ params }: { params: { id: string } }) => {
 	// Extract the `id` from the route parameters.
 	const id = params.id
-
-	// Fetch data from the API using the `id`.
-	const timestamp = new Date().getTime()
-	const apiUrlWithTimestamp = `${apiUrl}/${id}?timestamp=${timestamp}`
-	const { data } = await axios.get(apiUrlWithTimestamp)
+	const [data] = await Promise.all([getStudentDetails(id)])
 
 	// Render the details page.
 	return (

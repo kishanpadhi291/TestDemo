@@ -1,4 +1,18 @@
+# TestDemo
+
+TestDemo is a simple 2-page site built using Next.js, featuring a search box, a button to add data, and a table displaying student information. Users can add, edit, and delete student data interactively.
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Table of Contents
+
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Features](#features)
+- [Built with Material-UI](#built-with-material-ui)
+- [Folder Structure](#folder-structure)
+- [Technologies](#technologies)
+- [Dependencies](#dependencies)
+- [Usage](#usage)
 
 ## Getting Started
 
@@ -18,19 +32,60 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Installation
 
-## Learn More
+To run this project locally, you can clone the repository and follow these steps:
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone the repository:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   git clone git@github.com:kishanpadhi291/TestDemo.git
+   cd TestDemo
+   npm install
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Features
 
-## Deploy on Vercel
+- Interactive search box and data table.
+- Add, edit, and delete student data with ease.
+- Responsive and user-friendly interface.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Built with Material-UI
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- This project exclusively utilizes [Material-UI](https://mui.com/) for building the user interface.
+- Material-UI provides a set of React components that follow the Material Design guidelines, making it easy to create sleek and responsive UIs.
+- By leveraging Material-UI, we ensure a consistent and visually appealing design throughout the application.
+
+## Folder Structure
+
+The project is organized into the following main directories:
+
+- `app`: Contains the main components for rendering pages and the primary navigation logic.
+- `components`: Reusable React components used throughout the project.
+- `utils`: Global utility functions and components, such as the date picker.
+- `models`: Backend models for database schema and data handling.
+- `lib`: Houses slices, custom hooks, and the Redux store configuration.
+
+## Technologies
+
+> Frontend: Next.js
+> Testing: Jest for testing
+
+## Dependencies
+
+- [Next.js](https://nextjs.org/) v14.1.0
+- [Jest](https://jestjs.io/) v29.7.0
+- [Mui](https://mui.com/material-ui/) v5.15.10
+
+## Usage
+
+- The main page displays a search box, an "Add Data" button, and a table of student information.
+- Each row in the table has "Edit" and "Delete" buttons for interactive editing and deletion.
+  ![Dashboard](https://res.cloudinary.com/dnvgfs5kc/image/upload/v1709119138/ytsgi6rshglkrsk2tisl.png)
+- Clicking "Add Data" opens a form to add a new student.
+  ![FormModal](https://res.cloudinary.com/dnvgfs5kc/image/upload/v1709119138/hjf9aauc2wtfzmntxu8x.png)
+- Clicking "Edit button" opens a form to edit student data.
+  ![EditFormModal](https://res-console.cloudinary.com/dnvgfs5kc/media_explorer_thumbnails/148f521fc3f9b5cbb8c70e04ecf6b522/detailed)
+- Clicking on a table row shows detailed information about that student.
+  ![DetailPage](https://res.cloudinary.com/dnvgfs5kc/image/upload/v1709119531/o0bqcwjy92gporabw5tt.png)
