@@ -1,6 +1,6 @@
 # Student Registry
 
-Student Registry is a simple 2-page site built using Next.js, featuring a search box, a button to add data, and a table displaying student information. Users can add, edit, and delete student data interactively.
+Student Registry is a simple 2-page site built using Next.js, featuring filters, columns, density, export, a button to add data, and a table displaying student information. Users can add, edit, and delete student data interactively.
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Table of Contents
@@ -47,7 +47,7 @@ To run this project locally, you can clone the repository and follow these steps
 
 ## Features
 
-- Interactive search box and data table.
+- Interactive filters and data table.
 - Add, edit, and delete student data with ease.
 - Responsive and user-friendly interface.
 
@@ -80,12 +80,12 @@ The project is organized into the following main directories:
 
 ## Usage
 
-- The main page displays a search box, an "Add Data" button, and a table of student information.
-- Each row in the table has "Edit" and "Delete" buttons for interactive editing and deletion.
-  ![Dashboard](https://res.cloudinary.com/ddhrf759q/image/upload/v1709132073/ss1_nm34mc.png)
+- The main page displays filters, columns, density, export options, an "Add Data" button, and a table of student information.
+- Each row in the table has "Show", "Edit" and "Delete" buttons for interactive showing details of student, editing and deletion.
+  ![Dashboard](https://res.cloudinary.com/ddhrf759q/image/upload/v1709236364/ss1_bmumxz.png)
 - Clicking "Add Data" opens a form to add a new student.
-  ![FormModal](https://res.cloudinary.com/dnvgfs5kc/image/upload/v1709119138/hjf9aauc2wtfzmntxu8x.png)
+  ![FormModal](https://res.cloudinary.com/ddhrf759q/image/upload/v1709236364/ss2_zyh5ie.png)
 - Clicking "Edit button" opens a form to edit student data.
-  ![EditFormModal](https://res.cloudinary.com/ddhrf759q/image/upload/v1709132074/ss2_u72pal.png)
-- Clicking on a table row shows detailed information about that student.
-  ![DetailPage](https://res.cloudinary.com/ddhrf759q/image/upload/v1709132074/ss3_vfza7k.png)
+  ![EditFormModal](https://res.cloudinary.com/ddhrf759q/image/upload/v1709236364/ss4_z8u76f.png)
+- Clicking "Show button" shows detailed information about that student.
+  ![DetailPage](https://res.cloudinary.com/ddhrf759q/image/upload/v1709237856/ssdetails_wxw4wy.png)
