@@ -14,13 +14,13 @@ describe("FormModel", () => {
 
     it('Checks for button present in document', () => {
         render(<Provider store={store}><FormModel /></Provider>);
-        expect(screen.getByRole('button', { name: 'Add data' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Add Student' })).toBeInTheDocument();
     });
 
     it('Submits form with valid data', async () => {
         render(<Provider store={store}><FormModel /></Provider>);
 
-        const addDataButton = screen.getByRole('button', { name: 'Add data' });
+        const addDataButton = screen.getByRole('button', { name: 'Add Student' });
         expect(addDataButton).toBeInTheDocument();
 
         fireEvent.click(addDataButton);

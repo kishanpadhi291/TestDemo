@@ -5,7 +5,7 @@
  */
 
 import { configureStore } from '@reduxjs/toolkit'
-import formSlice, { Students } from '../FormSlice'
+import studentSlice, { Students } from '../studentSlice'
 
 /**
  * @typedef {Object} StoreState
@@ -29,7 +29,7 @@ export interface StoreState {
 // Configure the Redux store using @reduxjs/toolkit.
 export const store = configureStore({
 	reducer: {
-		form: formSlice, // Combine with the formSlice reducer
+		form: studentSlice, // Combine with the studentSlice reducer
 	},
 })
 

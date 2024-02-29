@@ -27,8 +27,8 @@
  *   );
  * };
  */
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
+import React, { useState, useEffect, useCallback } from 'react'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
@@ -42,24 +42,12 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material'
-import axios from 'axios'
 import { useAppDispatch } from '@/lib/hooks/hooks'
-import { apiUrl, Students, dataAdded } from '@/lib/FormSlice'
+import { Students, dataAdded } from '@/lib/studentSlice'
 import HobbiesDropdown from '@/utils/studentFormUtils/HobbiesDropdown/HobbiesDropdown'
 import DatePicker from '@/utils/studentFormUtils/DatePicker'
-
-const style = {
-	position: 'absolute' as 'absolute',
-	top: '50%',
-	left: '50%',
-	transform: 'translate(-50%, -50%)',
-	width: '80vw',
-	bgcolor: 'background.paper',
-	boxShadow: 24,
-	p: 4,
-	backgroundColor: '#8EC5FC',
-	backgroundImage: 'linear-gradient(62deg, #c9e4ff 0%, #e5caff 100%)',
-}
+import { createStudentAPI, editStudentAPI, getStudentByIdAPI } from '@/lib/api/api'
+import './formModel.scss'
 
 export default function FormModel({
 	id,
@@ -93,7 +81,7 @@ export default function FormModel({
 		// Fetch data memoized function
 		const fetchData = async () => {
 			try {
-				const response = await axios.get(`${apiUrl}/${id}`)
+				const response = await getStudentByIdAPI(id!)
 				setCurrent(response.data.student)
 				setFirstname(response.data.student?.firstName || '')
 				setMiddleName(response.data.student?.middleName || '')
@@ -132,7 +120,7 @@ export default function FormModel({
 		}
 		if (id) {
 			try {
-				const res = await axios.put(`${apiUrl}/${id}`, student)
+				const res = await editStudentAPI(id, student)
 				if (res.status === 200) {
 					dispatch(dataAdded())
 					toast.success('Student Data Updated Successfully')
@@ -148,7 +136,7 @@ export default function FormModel({
 			}
 		} else {
 			try {
-				const res = await axios.post(apiUrl, student)
+				const res = await createStudentAPI(student)
 				if (res.status === 201) {
 					toast.success('Student Added Successfully')
 					dispatch(dataAdded())
@@ -166,16 +154,23 @@ export default function FormModel({
 	}
 
 	return (
-		<div>
-			<Box textAlign='center' sx={{ whiteSpace: 'pre' }}>
-				<Button
-					variant='contained'
-					color='primary'
-					onClick={handleOpen}
-					style={{ backgroundColor: '#544765' }}
-				>
-					Add data
-				</Button>
+		<div className='header-main-wrap'>
+			<Box className="header-wrap">
+				<div className="header" >
+					<Typography variant='h3' className='header-text'>
+						Student List
+					</Typography>
+				</div>
+				<div className="header-button">
+					<Button
+						variant='contained'
+						color='primary'
+						onClick={handleOpen}
+						className='add-student-btn'
+					>
+						Add Student
+					</Button>
+				</div>
 			</Box>
 			<Modal
 				open={open!}
@@ -183,18 +178,14 @@ export default function FormModel({
 				aria-labelledby='modal-modal-title'
 				aria-describedby='modal-modal-description'
 			>
-				<Box sx={style} className='student-registry-form-container'>
+				<Box className='student-registry-form-container'>
 					<Typography
 						variant='h3'
-						sx={{
-							textAlign: 'center',
-							marginBottom: '30px',
-							fontSize: '2.2rem',
-						}}
+						className='modal-header'
 					>
 						Student Registration Form
 					</Typography>
-					<form onSubmit={submitHandler}>
+					<form onSubmit={submitHandler} className='form-wrap'>
 						<Grid container spacing={2}>
 							<Grid item xs={4}>
 								<TextField
@@ -305,8 +296,10 @@ export default function FormModel({
 						</Grid>
 						<Grid container spacing={2} mt={0.1}>
 							<Grid item xs={4}>
-								{current && <HobbiesDropdown defaultValue={selectedHobbies} />}
-								{!current && <HobbiesDropdown defaultValue={selectedHobbies} />}
+								<div className='hobbies-wrap'>
+									{current && <HobbiesDropdown defaultValue={selectedHobbies} />}
+									{!current && <HobbiesDropdown defaultValue={selectedHobbies} />}
+								</div>
 							</Grid>
 							<Grid item xs={4}>
 								{current && (
@@ -324,7 +317,7 @@ export default function FormModel({
 								type='submit'
 								variant='contained'
 								color='primary'
-								style={{ marginTop: 20, backgroundColor: '#544765' }}
+								className='submit-btn'
 							>
 								{id ? 'Edit' : 'Submit'}
 							</Button>
