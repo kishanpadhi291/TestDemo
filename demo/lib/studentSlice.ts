@@ -1,11 +1,12 @@
 /**
- * @module formSlice
+ * @module studentSlice
  * @description Redux slice for managing form-related state, including fetching student data and handling data addition.
  * @requires reduxjs/toolkit
  * @requires axios
  */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { getStudentsAPI } from './api/api'
 
 /**
  * @typedef {Object} Students - The shape of the Students object.
@@ -37,11 +38,11 @@ export interface Students {
 }
 
 /**
- * @type {Object} InitialState - The initial state of the formSlice.
+ * @type {Object} InitialState - The initial state of the studentSlice.
  * @property {Students[]} students - An array of Students objects representing student data.
  * @property {number} added - A count representing the number of times data has been added.
  */
-// Define the initial state of the formSlice
+// Define the initial state of the studentSlice
 const initialState: {
 	students: Students[]
 	added: number
@@ -73,7 +74,7 @@ export const getStudents = createAsyncThunk(
 	'Form/students',
 	async (_, { rejectWithValue }) => {
 		try {
-			const response = await axios.get(apiUrl)
+			const response = await getStudentsAPI()
 			return response.data.students
 		} catch (error) {
 			// If an error occurs during the API request, reject the promise with the error value
@@ -86,18 +87,18 @@ export const getStudents = createAsyncThunk(
  * Redux slice for managing form-related state.
  *
  * @constant {Object}
- * @name formSlice
+ * @name studentSlice
  * @type {import('@reduxjs/toolkit').Slice}
- * @property {InitialState} initialState - The initial state of the formSlice.
- * @property {Object} reducers - Redux reducers for the formSlice.
+ * @property {InitialState} initialState - The initial state of the studentSlice.
+ * @property {Object} reducers - Redux reducers for the studentSlice.
  * @property {Function} reducers.dataAdded - Reducer for updating the 'added' count when data is added.
  * @property {Object} extraReducers - Additional reducers for handling asynchronous actions.
  * @property {Function} extraReducers.getStudents.fulfilled - Reducer for updating the students state when the getStudents thunk is fulfilled.
  */
 // Create a slice of the Redux store for form-related state
-const formSlice = createSlice({
+const studentSlice = createSlice({
 	initialState,
-	name: 'formSlice',
+	name: 'studentSlice',
 	reducers: {
 		// Reducer for updating the 'added' count when data is added
 		dataAdded: (state) => {
@@ -126,5 +127,5 @@ const formSlice = createSlice({
  * @type {import('@reduxjs/toolkit').Reducer<InitialState>}
  */
 // Export the dataAdded action and the reducer for use in other parts of the application
-export const { dataAdded } = formSlice.actions
-export default formSlice.reducer
+export const { dataAdded } = studentSlice.actions
+export default studentSlice.reducer

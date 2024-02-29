@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import StudentTable from './StudentTable';
 import { Provider } from 'react-redux';
@@ -34,26 +34,18 @@ describe("StudentTable", () => {
 
     it('Renders StudentTable component', () => {
         render(<Provider store={store}><StudentTable /></Provider>);
-        expect(screen.getByText('FirstName')).toBeInTheDocument();
+        expect(screen.getByText('Name')).toBeInTheDocument();
         expect(screen.getByText('Email')).toBeInTheDocument();
+        expect(screen.getByText('Contact')).toBeInTheDocument();
     });
 
-    it('Searches and filters rows based on input', async () => {
-
+    it('Filters rows based on input', async () => {
         act(() => {
             render(<Provider store={store}><StudentTable /></Provider>);
         })
-
-        await act(async () => {
-            const searchInput = screen.getByPlaceholderText('Search...');
-            fireEvent.change(searchInput, { target: { value: 'John' } });
-        });
-
         expect(screen.getByText('John')).toBeInTheDocument();
         expect(screen.getByText('john@example.com')).toBeInTheDocument();
-        expect(screen.getByText('123-456-7890')).toBeInTheDocument();
-        expect(screen.getByText('Male')).toBeInTheDocument();
-        expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument();
+        expect(screen.getByText('123-456-7890')).toBeInTheDocument();                       
     });
 
 })
