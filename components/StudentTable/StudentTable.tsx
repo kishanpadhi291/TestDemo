@@ -34,19 +34,14 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useRouter } from 'next/navigation'
 import FormModel from '../FormModel/FormModel'
-import {
-	dataChanged,
-	deleteData,
-	editStudentData,
-	setCurrentData,
-} from '@/lib/studentSlice'
+import { deleteData, editStudentData, setCurrentData } from '@/lib/studentSlice'
 import { useSelector } from 'react-redux'
 import { StoreState } from '@/lib/store/store'
 import { useAppDispatch } from 'lib/hooks/hooks'
 import { ToastContainer, toast } from 'react-toastify'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
-import { deleteStudentAPI } from '@/lib/api/api'
+
 function capitalizeFirstLetter(str: string) {
 	return str ? str[0].toUpperCase() + str.slice(1) : ''
 }
@@ -108,12 +103,9 @@ export default function StudentTable() {
 	}))
 
 	useEffect(() => {
+		dispatch(setCurrentData())
 		setIsLoading(false)
 	}, [studentsData])
-
-	useEffect(() => {
-		dispatch(setCurrentData())
-	}, [])
 
 	const handleEditClick = useCallback(
 		(id: string) => {
@@ -130,10 +122,6 @@ export default function StudentTable() {
 				if (result) {
 					dispatch(deleteData(id))
 					toast.success('Student Deleted Successfully')
-					// if (res.status === 200) {
-					// 	dispatch(dataChanged())
-
-					// }
 				}
 			} catch (error) {
 				console.error('Error deleting student:', error)
@@ -144,8 +132,8 @@ export default function StudentTable() {
 	)
 
 	const handleRowClick = useCallback(
-		(data: string) => {
-			router.push(`/${data}`)
+		(id: string) => {
+			router.push(`/${id}`)
 		},
 		[router]
 	)

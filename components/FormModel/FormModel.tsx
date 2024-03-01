@@ -102,34 +102,21 @@ export default function FormModel({
 		if (id) {
 			try {
 				dispatch(editStudentData({ id, student }))
+				toast.success('Student Updated Successfully')
+				onClose?.(null)
+				setOpen(false)
+			} catch (error) {
+				toast.error(`Error:${error}`)
+			}
+		} else {
+			try {
+				dispatch(addData(student))
 				toast.success('Student Added Successfully')
 				onClose?.(null)
 				setOpen(false)
 			} catch (error) {
-				toast.error(
-					'Email should be unique, email already registered with a different user'
-				)
+				toast.error(`Error:${error}`)
 			}
-		} else {
-			dispatch(addData(student))
-			toast.success('Student Added Successfully')
-			onClose?.(null)
-			setOpen(false)
-			// try {
-			// 	const res = await createStudentAPI(student)
-			// 	if (res.status === 201) {
-			// 		toast.success('Student Added Successfully')
-			// 		dispatch(dataChanged())
-			// 		onClose?.(null)
-			// 		setOpen(false)
-			// 	} else {
-			// 		toast.error('Something went wrong')
-			// 	}
-			// } catch (error) {
-			// 	toast.error(
-			// 		'Email should be unique, email already registered with a different user'
-			// 	)
-			// }
 		}
 	}
 
@@ -177,7 +164,6 @@ export default function FormModel({
 								<TextField
 									label='Middle Name'
 									name='middleName'
-									// value={middleName}
 									defaultValue={currentStudent?.middleName}
 									fullWidth
 									required
@@ -187,8 +173,6 @@ export default function FormModel({
 								<TextField
 									label='Surname'
 									name='lastName'
-									// value={lastName}
-									// onChange={(e) => setLastName(e.target.value)}
 									defaultValue={currentStudent?.lastName}
 									fullWidth
 									required
@@ -201,9 +185,7 @@ export default function FormModel({
 									label='Email'
 									name='email'
 									type='email'
-									// value={email}
 									defaultValue={currentStudent?.email}
-									// onChange={(e) => setStudentEmail(e.target.value)}
 									fullWidth
 									margin='normal'
 									required
@@ -214,9 +196,7 @@ export default function FormModel({
 									label='Contact'
 									name='contactNumber'
 									type='number'
-									// value={phoneNumber}
 									defaultValue={currentStudent?.contactNumber}
-									// onChange={(e) => setPhoneNumber(e.target.value)}
 									fullWidth
 									margin='normal'
 									required
@@ -233,9 +213,7 @@ export default function FormModel({
 									<Select
 										label='Gender'
 										name='gender'
-										// value={selectedGender}
 										defaultValue={currentStudent?.gender}
-										// onChange={(e) => setSelectedGender(e.target.value)}
 									>
 										<MenuItem value='male'>Male</MenuItem>
 										<MenuItem value='female'>Female</MenuItem>
@@ -250,9 +228,7 @@ export default function FormModel({
 									label='College Name'
 									name='collegeName'
 									type='text'
-									// value={collegeName}
 									defaultValue={currentStudent?.collegeName}
-									// onChange={(e) => setCollegeName(e.target.value)}
 									fullWidth
 									margin='normal'
 									required
@@ -264,9 +240,7 @@ export default function FormModel({
 									<Select
 										label='Department'
 										name='department'
-										// value={selectedDepartment}
 										defaultValue={currentStudent?.department}
-										// onChange={(e) => setSelectedDepartment(e.target.value)}
 									>
 										<MenuItem value='IT'>IT</MenuItem>
 										<MenuItem value='CE'>CE</MenuItem>

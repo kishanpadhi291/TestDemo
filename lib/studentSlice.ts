@@ -84,14 +84,10 @@ const studentSlice = createSlice({
 				(student) => student._id !== action.payload
 			)
 		},
-		dataChanged: (state) => {
-			state.changed = state.changed + 1
-		},
 	},
 })
 
 export const {
-	dataChanged,
 	addData,
 	editStudentData,
 	getCurrentData,
