@@ -59,7 +59,7 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 const HobbiesDropdown = ({
 	defaultValue,
 }: {
-	defaultValue?: undefined | [string] | string[]
+	defaultValue?: undefined | string
 }) => {
 	const theme = useTheme()
 	const [personName, setPersonName] = React.useState<string[]>([])
@@ -73,10 +73,22 @@ const HobbiesDropdown = ({
 
 	// Set initial values based on defaultValue
 	useEffect(() => {
+		// Assuming defaultValue is a prop passed to your component
 		if (defaultValue) {
-			defaultValue.map((value) => {
-				setPersonName(typeof value === 'string' ? value.split(',') : value)
+			const check = defaultValue.split(',')
+
+			// Use a temporary array to accumulate values
+			const personNamesArray: string[] = []
+
+			check.forEach((value) => {
+				// Split each value by ',' and add to the temporary array
+				personNamesArray.push(
+					...(typeof value === 'string' ? value.split(',') : [value])
+				)
 			})
+
+			// Set the PersonName state with the accumulated array
+			setPersonName(personNamesArray)
 		}
 	}, [defaultValue])
 

@@ -24,11 +24,13 @@
  */
 'use client'
 import Card from '@/components/Card/Card'
-import { Students } from '@/lib/studentSlice'
+import { getCurrentData } from '@/lib/studentSlice'
 import { CardContent, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
-import CircularProgress from '@mui/material/CircularProgress';
-import { getStudentByIdAPI } from '@/lib/api/api'
+import CircularProgress from '@mui/material/CircularProgress'
+import { useAppDispatch } from '@/lib/hooks/hooks'
+import { useSelector } from 'react-redux'
+import { StoreState } from '@/lib/store/store'
 /**
  * @typedef {Object} StudentData
  * @property {Students} student - The detailed information about the student.
@@ -44,69 +46,75 @@ import { getStudentByIdAPI } from '@/lib/api/api'
  */
 
 const StudentDetail = ({ id }: { id: string }) => {
-	const [studentData, setStudentData] = useState<{ student: Students }>()
 	const [isLoading, setIsLoading] = useState(true)
+	const curStudent = useSelector(
+		(state: StoreState) => state.form.currentStudent
+	)
+	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		const fetchData = async () => {
-			const { data } = await getStudentByIdAPI(id!)
-			setStudentData(data)
-			setIsLoading(false)
-		}
-		fetchData()
+		dispatch(getCurrentData(id))
+		setIsLoading(false)
 	}, [])
 
 	return (
 		<>
-			{isLoading ? (<div className="loader" data-testid="loader"><CircularProgress /></div>) : <div className='details'>
-				{/* Card component for styling */}
-				<Card>
-					{/* Heading section */}
-					<div className='heading'>
-						<Typography variant='h3'>Details</Typography>
-					</div>
+			{isLoading ? (
+				<div className='loader' data-testid='loader'>
+					<CircularProgress />
+				</div>
+			) : (
+				<div className='details'>
+					{/* Card component for styling */}
+					<Card>
+						{/* Heading section */}
+						<div className='heading'>
+							<Typography variant='h3'>Details</Typography>
+						</div>
 
-					{/* Card content section */}
-					<CardContent className='card-content-wrapper'>
-						<div className='card-item'>
-							<div className='item-wrap'>
-								<div>Name:</div>
-								<div>{studentData?.student.firstName} {studentData?.student.middleName}{' '}
-									{studentData?.student.lastName}</div>
-							</div>
-							<div className='item-wrap'>
-								<div>Email:</div>
-								<div>{studentData?.student.email}</div>
-							</div>
-							<div className='item-wrap'>
-								<div>PhoneNumber:</div>
-								<div> {studentData?.student.contactNumber}
+						{/* Card content section */}
+						<CardContent className='card-content-wrapper'>
+							<div className='card-item'>
+								<div className='item-wrap'>
+									<div>Name:</div>
+									<div>
+										{curStudent!.firstName} {curStudent!.middleName}{' '}
+										{curStudent!.lastName}
+									</div>
+								</div>
+								<div className='item-wrap'>
+									<div>Email:</div>
+									<div>{curStudent!.email}</div>
+								</div>
+								<div className='item-wrap'>
+									<div>PhoneNumber:</div>
+									<div> {curStudent!.contactNumber}</div>
+								</div>
+								<div className='item-wrap'>
+									<div>Gender:</div>
+									<div> {curStudent!.gender}</div>
+								</div>
+								<div className='item-wrap'>
+									<div>College: </div>
+									<div>{curStudent!.collegeName}</div>
+								</div>
+								<div className='item-wrap'>
+									<div>Department:</div>
+									<div>{curStudent!.department}</div>
+								</div>
+								<div className='item-wrap'>
+									<div>Hobbies:</div>
+									<div>{curStudent!.hobbies}</div>
+								</div>
+								<div className='item-wrap'>
+									<div>DOB:</div>
+									<div>{curStudent!.dob}</div>
 								</div>
 							</div>
-							<div className='item-wrap'>
-								<div>Gender:</div>
-								<div> {studentData?.student.gender}</div>
-							</div>
-							<div className='item-wrap'>
-								<div>College: </div>
-								<div>{studentData?.student.collegeName}</div>
-							</div>
-							<div className='item-wrap'>
-								<div>Department:</div>
-								<div>{studentData?.student.department}</div>
-							</div>
-							<div className='item-wrap'>
-								<div>Hobbies:</div>
-								<div>{studentData?.student.hobbies.join(', ')}</div>
-							</div>
-							<div className='item-wrap'>
-								<div>DOB:</div>
-								<div>{studentData?.student.dob}</div>
-							</div>
-						</div>
-					</CardContent>
-				</Card>
-			</div>}
+						</CardContent>
+					</Card>
+				</div>
+			)}
 		</>
 	)
 }

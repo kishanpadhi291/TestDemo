@@ -43,11 +43,17 @@ import {
 	Typography,
 } from '@mui/material'
 import { useAppDispatch } from '@/lib/hooks/hooks'
-import { Students, dataAdded } from '@/lib/studentSlice'
+import {
+	addData,
+	editStudentData,
+	getCurrentData,
+	setCurrentData,
+} from '@/lib/studentSlice'
 import HobbiesDropdown from '@/utils/studentFormUtils/HobbiesDropdown/HobbiesDropdown'
 import DatePicker from '@/utils/studentFormUtils/DatePicker'
-import { createStudentAPI, editStudentAPI, getStudentByIdAPI } from '@/lib/api/api'
 import './formModel.scss'
+import { useSelector } from 'react-redux'
+import { StoreState } from '@/lib/store/store'
 
 export default function FormModel({
 	id,
@@ -57,16 +63,9 @@ export default function FormModel({
 	onClose?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
 	const [open, setOpen] = useState(false)
-	const [current, setCurrent] = useState<Students>()
-	const [firstName, setFirstname] = useState('')
-	const [middleName, setMiddleName] = useState('')
-	const [lastName, setLastName] = useState('')
-	const [phoneNumber, setPhoneNumber] = useState('')
-	const [email, setStudentEmail] = useState('')
-	const [collegeName, setCollegeName] = useState('')
-	const [selectedGender, setSelectedGender] = useState('')
-	const [selectedDepartment, setSelectedDepartment] = useState('')
-	const [selectedHobbies, setSelectedHobbies] = useState<string[]>([])
+	const currentStudent = useSelector(
+		(state: StoreState) => state.form.currentStudent
+	)
 	const dispatch = useAppDispatch()
 
 	// Memoized functions using useMemo and useCallback
@@ -74,34 +73,16 @@ export default function FormModel({
 	const handleClose = useCallback(() => {
 		setOpen(false)
 		onClose?.(null)
+		dispatch(setCurrentData())
 		id = undefined
 	}, [onClose])
 
 	useEffect(() => {
-		// Fetch data memoized function
-		const fetchData = async () => {
-			try {
-				const response = await getStudentByIdAPI(id!)
-				setCurrent(response.data.student)
-				setFirstname(response.data.student?.firstName || '')
-				setMiddleName(response.data.student?.middleName || '')
-				setLastName(response.data.student?.lastName || '')
-				setPhoneNumber(response.data.student?.contactNumber || '')
-				setStudentEmail(response.data.student?.email || '')
-				setCollegeName(response.data.student?.collegeName || '')
-				setSelectedGender(response.data.student?.gender || '')
-				setSelectedDepartment(response.data.student?.department || '')
-				setSelectedHobbies(response.data.student?.hobbies || [])
-			} catch (error) {
-				console.error('Error fetching data:', error)
-			}
-		}
-
 		if (id) {
+			dispatch(getCurrentData(id))
 			handleOpen()
-			fetchData()
 		}
-	}, [id, handleOpen])
+	}, [])
 
 	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e?.preventDefault()
@@ -120,48 +101,47 @@ export default function FormModel({
 		}
 		if (id) {
 			try {
-				const res = await editStudentAPI(id, student)
-				if (res.status === 200) {
-					dispatch(dataAdded())
-					toast.success('Student Data Updated Successfully')
-					onClose?.(null)
-					setOpen(false)
-				} else {
-					toast.error('Something went wrong')
-				}
+				dispatch(editStudentData({ id, student }))
+				toast.success('Student Added Successfully')
+				onClose?.(null)
+				setOpen(false)
 			} catch (error) {
 				toast.error(
 					'Email should be unique, email already registered with a different user'
 				)
 			}
 		} else {
-			try {
-				const res = await createStudentAPI(student)
-				if (res.status === 201) {
-					toast.success('Student Added Successfully')
-					dispatch(dataAdded())
-					onClose?.(null)
-					setOpen(false)
-				} else {
-					toast.error('Something went wrong')
-				}
-			} catch (error) {
-				toast.error(
-					'Email should be unique, email already registered with a different user'
-				)
-			}
+			dispatch(addData(student))
+			toast.success('Student Added Successfully')
+			onClose?.(null)
+			setOpen(false)
+			// try {
+			// 	const res = await createStudentAPI(student)
+			// 	if (res.status === 201) {
+			// 		toast.success('Student Added Successfully')
+			// 		dispatch(dataChanged())
+			// 		onClose?.(null)
+			// 		setOpen(false)
+			// 	} else {
+			// 		toast.error('Something went wrong')
+			// 	}
+			// } catch (error) {
+			// 	toast.error(
+			// 		'Email should be unique, email already registered with a different user'
+			// 	)
+			// }
 		}
 	}
 
 	return (
 		<div className='header-main-wrap'>
-			<Box className="header-wrap">
-				<div className="header" >
+			<Box className='header-wrap'>
+				<div className='header'>
 					<Typography variant='h3' className='header-text'>
 						Student List
 					</Typography>
 				</div>
-				<div className="header-button">
+				<div className='header-button'>
 					<Button
 						variant='contained'
 						color='primary'
@@ -179,10 +159,7 @@ export default function FormModel({
 				aria-describedby='modal-modal-description'
 			>
 				<Box className='student-registry-form-container'>
-					<Typography
-						variant='h3'
-						className='modal-header'
-					>
+					<Typography variant='h3' className='modal-header'>
 						Student Registration Form
 					</Typography>
 					<form onSubmit={submitHandler} className='form-wrap'>
@@ -191,8 +168,7 @@ export default function FormModel({
 								<TextField
 									label='First Name'
 									name='firstName'
-									value={firstName}
-									onChange={(e) => setFirstname(e.target.value)}
+									defaultValue={currentStudent?.firstName}
 									fullWidth
 									required
 								/>
@@ -201,8 +177,8 @@ export default function FormModel({
 								<TextField
 									label='Middle Name'
 									name='middleName'
-									value={middleName}
-									onChange={(e) => setMiddleName(e.target.value)}
+									// value={middleName}
+									defaultValue={currentStudent?.middleName}
 									fullWidth
 									required
 								/>
@@ -211,8 +187,9 @@ export default function FormModel({
 								<TextField
 									label='Surname'
 									name='lastName'
-									value={lastName}
-									onChange={(e) => setLastName(e.target.value)}
+									// value={lastName}
+									// onChange={(e) => setLastName(e.target.value)}
+									defaultValue={currentStudent?.lastName}
 									fullWidth
 									required
 								/>
@@ -224,8 +201,9 @@ export default function FormModel({
 									label='Email'
 									name='email'
 									type='email'
-									value={email}
-									onChange={(e) => setStudentEmail(e.target.value)}
+									// value={email}
+									defaultValue={currentStudent?.email}
+									// onChange={(e) => setStudentEmail(e.target.value)}
 									fullWidth
 									margin='normal'
 									required
@@ -236,8 +214,9 @@ export default function FormModel({
 									label='Contact'
 									name='contactNumber'
 									type='number'
-									value={phoneNumber}
-									onChange={(e) => setPhoneNumber(e.target.value)}
+									// value={phoneNumber}
+									defaultValue={currentStudent?.contactNumber}
+									// onChange={(e) => setPhoneNumber(e.target.value)}
 									fullWidth
 									margin='normal'
 									required
@@ -254,8 +233,9 @@ export default function FormModel({
 									<Select
 										label='Gender'
 										name='gender'
-										value={selectedGender}
-										onChange={(e) => setSelectedGender(e.target.value)}
+										// value={selectedGender}
+										defaultValue={currentStudent?.gender}
+										// onChange={(e) => setSelectedGender(e.target.value)}
 									>
 										<MenuItem value='male'>Male</MenuItem>
 										<MenuItem value='female'>Female</MenuItem>
@@ -270,8 +250,9 @@ export default function FormModel({
 									label='College Name'
 									name='collegeName'
 									type='text'
-									value={collegeName}
-									onChange={(e) => setCollegeName(e.target.value)}
+									// value={collegeName}
+									defaultValue={currentStudent?.collegeName}
+									// onChange={(e) => setCollegeName(e.target.value)}
 									fullWidth
 									margin='normal'
 									required
@@ -283,8 +264,9 @@ export default function FormModel({
 									<Select
 										label='Department'
 										name='department'
-										value={selectedDepartment}
-										onChange={(e) => setSelectedDepartment(e.target.value)}
+										// value={selectedDepartment}
+										defaultValue={currentStudent?.department}
+										// onChange={(e) => setSelectedDepartment(e.target.value)}
 									>
 										<MenuItem value='IT'>IT</MenuItem>
 										<MenuItem value='CE'>CE</MenuItem>
@@ -297,19 +279,15 @@ export default function FormModel({
 						<Grid container spacing={2} mt={0.1}>
 							<Grid item xs={4}>
 								<div className='hobbies-wrap'>
-									{current && <HobbiesDropdown defaultValue={selectedHobbies} />}
-									{!current && <HobbiesDropdown defaultValue={selectedHobbies} />}
+									<HobbiesDropdown defaultValue={currentStudent?.hobbies} />
 								</div>
 							</Grid>
 							<Grid item xs={4}>
-								{current && (
-									<DatePicker
-										label='DOB'
-										name='dob'
-										value={id && current ? current.dob : ''}
-									/>
-								)}
-								{!current && <DatePicker label='DOB' name='dob' value={''} />}
+								<DatePicker
+									label='DOB'
+									name='dob'
+									value={id ? currentStudent?.dob : ''}
+								/>
 							</Grid>
 						</Grid>
 						<Grid container justifyContent='center'>

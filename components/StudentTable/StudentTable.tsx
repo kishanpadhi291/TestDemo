@@ -34,25 +34,29 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useRouter } from 'next/navigation'
 import FormModel from '../FormModel/FormModel'
-import { dataAdded, getStudents } from '@/lib/studentSlice'
+import {
+	dataChanged,
+	deleteData,
+	editStudentData,
+	setCurrentData,
+} from '@/lib/studentSlice'
 import { useSelector } from 'react-redux'
 import { StoreState } from '@/lib/store/store'
 import { useAppDispatch } from 'lib/hooks/hooks'
 import { ToastContainer, toast } from 'react-toastify'
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import { deleteStudentAPI } from '@/lib/api/api'
 function capitalizeFirstLetter(str: string) {
-	return str ? str[0].toUpperCase() + str.slice(1) : '';
+	return str ? str[0].toUpperCase() + str.slice(1) : ''
 }
 export default function StudentTable() {
 	const router = useRouter()
 	const dispatch = useAppDispatch()
 	const studentsData = useSelector((state: StoreState) => state.form.students)
-	const added = useSelector((state: StoreState) => state.form.added)
+	const changed = useSelector((state: StoreState) => state.form.added)
 	const [editData, setEditData] = useState<string | null>(null)
 	const [isLoading, setIsLoading] = useState(true)
-
 
 	const columns = [
 		{ field: 'name', headerName: 'Name', flex: 1 },
@@ -88,32 +92,33 @@ export default function StudentTable() {
 				</div>
 			),
 		},
-
-	];
+	]
 	const rowsForDataGrid = studentsData?.map((row) => ({
 		id: row._id,
-		name: `${capitalizeFirstLetter(row.lastName)} ${capitalizeFirstLetter(row.firstName)}`,
+		name: `${capitalizeFirstLetter(row.lastName!)} ${capitalizeFirstLetter(
+			row.firstName!
+		)}`,
 		email: row.email,
 		contactNumber: row.contactNumber,
 		gender: row.gender,
 		collegeName: row.collegeName,
 		department: row.department,
 		hobbies: row.hobbies,
-		dob: row.dob
-	}));
+		dob: row.dob,
+	}))
 
 	useEffect(() => {
-		!studentsData?.length && dispatch(getStudents())
 		setIsLoading(false)
 	}, [studentsData])
 
 	useEffect(() => {
-		dispatch(getStudents())
-	}, [added])
+		dispatch(setCurrentData())
+	}, [])
 
 	const handleEditClick = useCallback(
-		(data: string) => {
-			setEditData(data!)
+		(id: string) => {
+			setEditData(id!)
+			dispatch(editStudentData(id))
 		},
 		[] // Empty dependency array as it doesn't depend on external variables
 	)
@@ -123,12 +128,12 @@ export default function StudentTable() {
 			try {
 				const result = confirm('Want to Delete?')
 				if (result) {
+					dispatch(deleteData(id))
+					toast.success('Student Deleted Successfully')
+					// if (res.status === 200) {
+					// 	dispatch(dataChanged())
 
-					const res = await deleteStudentAPI(id!)
-					if (res.status === 200) {
-						dispatch(dataAdded())
-						toast.success('Student Deleted Successfully')
-					}
+					// }
 				}
 			} catch (error) {
 				console.error('Error deleting student:', error)
@@ -145,7 +150,6 @@ export default function StudentTable() {
 		[router]
 	)
 
-
 	return (
 		<>
 			<ToastContainer />
@@ -153,9 +157,12 @@ export default function StudentTable() {
 				<Box>
 					<FormModel />
 				</Box>
-				{isLoading ? (<div className="loader"><CircularProgress /></div>) :
-					<div className="table-wrapper">
-
+				{isLoading ? (
+					<div className='loader'>
+						<CircularProgress />
+					</div>
+				) : (
+					<div className='table-wrapper'>
 						<DataGrid
 							rows={rowsForDataGrid}
 							columns={columns}
@@ -165,7 +172,7 @@ export default function StudentTable() {
 							pagination
 						/>
 					</div>
-				}
+				)}
 				{editData && <FormModel id={editData} onClose={setEditData} />}
 			</Container>
 		</>

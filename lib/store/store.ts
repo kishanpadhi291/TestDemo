@@ -17,6 +17,7 @@ import studentSlice, { Students } from '../studentSlice'
 export interface StoreState {
 	form: {
 		students: Students[] // Array of student data
+		currentStudent: Students | null | undefined
 		added: number // Counter for tracking additions
 	}
 }
