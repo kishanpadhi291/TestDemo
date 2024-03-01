@@ -49,7 +49,6 @@ export default function StudentTable() {
 	const router = useRouter()
 	const dispatch = useAppDispatch()
 	const studentsData = useSelector((state: StoreState) => state.form.students)
-	const changed = useSelector((state: StoreState) => state.form.added)
 	const [editData, setEditData] = useState<string | null>(null)
 	const [isLoading, setIsLoading] = useState(true)
 
@@ -88,19 +87,21 @@ export default function StudentTable() {
 			),
 		},
 	]
-	const rowsForDataGrid = studentsData?.map((row) => ({
-		id: row._id,
-		name: `${capitalizeFirstLetter(row.lastName!)} ${capitalizeFirstLetter(
-			row.firstName!
-		)}`,
-		email: row.email,
-		contactNumber: row.contactNumber,
-		gender: row.gender,
-		collegeName: row.collegeName,
-		department: row.department,
-		hobbies: row.hobbies,
-		dob: row.dob,
-	}))
+	const rowsForDataGrid = studentsData
+		?.map((row) => ({
+			id: row._id,
+			name: `${capitalizeFirstLetter(row.lastName!)} ${capitalizeFirstLetter(
+				row.firstName!
+			)}`,
+			email: row.email,
+			contactNumber: row.contactNumber,
+			gender: row.gender,
+			collegeName: row.collegeName,
+			department: row.department,
+			hobbies: row.hobbies,
+			dob: row.dob,
+		}))
+		.reverse()
 
 	useEffect(() => {
 		dispatch(setCurrentData())
