@@ -1,0 +1,13 @@
+.details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    min-height: 100vh;
+    background: #7f7f7f;
+
+    p {
+        padding: 10px;
+    }
+}

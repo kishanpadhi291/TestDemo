@@ -1,0 +1,15 @@
+// table css
+.table-wrapper {
+  height: calc(100vh - 155px);
+}
+
+.hobbies-wrap {
+  .MuiInputBase-root {
+    .MuiSelect-select {
+      padding: 0 16px;
+      min-height: 55px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}

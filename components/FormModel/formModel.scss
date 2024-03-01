@@ -1,0 +1,58 @@
+// header css
+.header-main-wrap {
+    padding: 30px 0;
+
+    .header-wrap {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+
+        .header {
+            flex: 1;
+        }
+    }
+
+    .add-student-btn {
+        white-space: pre;
+    }
+}
+
+// student registry form modal
+.student-registry-form-container {
+    position: absolute;
+    border-radius: 15px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    background-color: #fff;
+
+    .modal-header {
+        text-align: center;
+        padding: 20px 0 20px 0;
+        font-size: 36px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #0000003b;
+    }
+
+    .form-wrap {
+        padding: 0 20px 20px 20px;
+    }
+
+    .submit-btn {
+        margin: 20px 0 0 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-main-wrap {
+        .header-wrap {
+            .header {
+                h3 {
+                    font-size: 25px;
+                }
+            }
+        }
+    }
+}
