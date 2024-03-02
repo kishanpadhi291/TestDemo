@@ -107,6 +107,9 @@ export default function StudentTable() {
 		dispatch(setCurrentData())
 		setIsLoading(false)
 	}, [studentsData])
+	useEffect(() => {
+		dispatch(setCurrentData())
+	}, [])
 
 	const handleEditClick = useCallback(
 		(id: string) => {

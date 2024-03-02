@@ -39,9 +39,7 @@ const page = async ({ params }: { params: { id: string } }) => {
 	const id = params.id
 
 	// Render the details page.
-	return (
-		<StudentDetails id={id} />
-	)
+	return <StudentDetails id={id} />
 }
 
 // Export the page component for Next.js to use.

@@ -31,6 +31,8 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { useAppDispatch } from '@/lib/hooks/hooks'
 import { useSelector } from 'react-redux'
 import { StoreState } from '@/lib/store/store'
+import { useRouter } from 'next/navigation'
+import FormModel from '../FormModel/FormModel'
 /**
  * @typedef {Object} StudentData
  * @property {Students} student - The detailed information about the student.
@@ -47,6 +49,8 @@ import { StoreState } from '@/lib/store/store'
 
 const StudentDetail = ({ id }: { id: string }) => {
 	const [isLoading, setIsLoading] = useState(true)
+	const [editId, setEditId] = useState<string | null>(null)
+	const router = useRouter()
 	const curStudent = useSelector(
 		(state: StoreState) => state.form.currentStudent
 	)
@@ -56,7 +60,15 @@ const StudentDetail = ({ id }: { id: string }) => {
 		dispatch(getCurrentData(id))
 		setIsLoading(false)
 	}, [])
-
+	useEffect(() => {
+		dispatch(getCurrentData(id))
+	}, [editId])
+	const onClickHandler = () => {
+		router.push('/')
+	}
+	const onClickEditHandler = () => {
+		setEditId(id)
+	}
 	return (
 		<>
 			{isLoading ? (
@@ -112,6 +124,11 @@ const StudentDetail = ({ id }: { id: string }) => {
 								</div>
 							</div>
 						</CardContent>
+						<button onClick={onClickHandler}>Back</button>
+						<button onClick={onClickEditHandler}>Edit</button>
+						{editId && (
+							<FormModel id={editId} onClose={setEditId} detail={true} />
+						)}
 					</Card>
 				</div>
 			)}

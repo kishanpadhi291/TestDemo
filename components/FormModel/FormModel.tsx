@@ -57,9 +57,11 @@ import { StoreState } from '@/lib/store/store'
 
 export default function FormModel({
 	id,
+	detail,
 	onClose,
 }: {
 	id?: string
+	detail?: boolean
 	onClose?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
 	const [open, setOpen] = useState(false)
@@ -73,7 +75,9 @@ export default function FormModel({
 	const handleClose = useCallback(() => {
 		setOpen(false)
 		onClose?.(null)
-		dispatch(setCurrentData())
+		if (!detail) {
+			dispatch(setCurrentData())
+		}
 		id = undefined
 	}, [onClose])
 
